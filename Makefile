@@ -5,16 +5,17 @@ NAME=fdf
 FLAGS=-Wall -Wextra -Werror
 MLXFLAGS=-lmlx -lXext -lX11
 LIBFLAGS=-lft -L../libft
+MATH=-lm -lpthread
 
 .PHONY: all clean fclean re
 
 all: $(NAME)
 
 $(OBJ): $(SRC)
-	gcc $(FLAGS) $(MLXFLAGS) $(LIBFLAGS) -c $(SRC) -o $(OBJ)
+	gcc $(FLAGS) $(MLXFLAGS) $(LIBFLAGS) $(MATH) -c $(SRC) -o $(OBJ)
 
 $(NAME): $(OBJ)
-	gcc $(FLAGS) $(OBJ) -o $(NAME) $(MLXFLAGS) 
+	gcc $(FLAGS) $(OBJ) -o $(NAME) $(MLXFLAGS) $(MATH) $(LIBFLAGS)
 clean:
 	rm -f $(OBJ)
 
