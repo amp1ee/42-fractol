@@ -15,21 +15,27 @@
 #define		KB_Down						65364
 #define 	KB_Left						65361
 #define		KB_Right					65363
+#define 	KP_Add                      0xffab
+#define		KP_Subtract					0xffad
+#define 	KB_i                        0x0069
+#define		KB_u						0x0075
+
+#define		ITERATIONS					200
 
 typedef struct	s_mlx
 {
 	void	*mlx;
 	void	*window;
-	int		x, y;
 	void	*img;
 	char	*pxl;
 	int		bpp;
 	int		s_line;
 	int		ed;
-	double	n;
+	int		n;
 	float	step;
-	float		ash;
-	float		bsh;
+	float	ash;
+	float	bsh;
+	int		iter;
 }				t_mlx;
 
 void	*draw(t_mlx *mlx_p);
@@ -40,7 +46,7 @@ int		key_handler(int keycode, void *param)
 	float	step;		
 
 	p = (t_mlx *)param;
-	printf("key = %d\n", keycode);
+	printf("n = %d\n", p->n);
 	step = p->step;
 	if (keycode == KB_Esc)
 	{
@@ -49,9 +55,9 @@ int		key_handler(int keycode, void *param)
 		p = NULL;
 		exit(0);
 	}
-	else if (keycode == 65451) // Heavy Plus
+	else if (keycode == KP_Add) // Heavy Plus
 		p->step *= 10;
-	else if (keycode == 65453) // Heavy Minus
+	else if (keycode == KP_Subtract) // Heavy Minus
 		p->step /= 10;
 	else if (keycode == KB_X)
 		(p->n) += 0.5 / step;
@@ -65,7 +71,10 @@ int		key_handler(int keycode, void *param)
 		(p->bsh) += step;
 	else if (keycode == KB_Down)
 		(p->bsh) -= step;
-
+	else if (keycode == KB_i)
+		p->iter *= 10;
+	else if (keycode == KB_u)
+		p->iter /= 10;
 	if (p && keycode != 65293)
 		draw(p);
 	return (0);
@@ -94,6 +103,7 @@ t_mlx	*init_fdf(void)
 	fdf->ash = -2;
 	fdf->bsh = 2;
 	fdf->step = 0.05;
+	fdf->iter = ITERATIONS;
 	return (fdf);
 }
 
@@ -128,38 +138,46 @@ void	put_pxl(t_mlx *e, int x, int y, unsigned int c)
 }
 
 void	*draw(t_mlx *fdf)
-{	
-	int			i;
-	double		a, b, x, y, /*n,*/ t;
+{
+	int		i;
+	int		x, y;
+	float	ash, bsh;
+	double	a, b, aa, bb, n;
+	double	ca, cb;
+	int		iter;
 
-	//n = 540;      // Size
-	fdf->y = 0;
-	while (fdf->y < HEIGHT)
+	x = 0;
+	ash = fdf->ash;
+	bsh = fdf->bsh;
+	n = fdf->n;
+	iter = fdf->iter;
+	while (x < WIDTH)
 	{
-		fdf->x = 0;
-		b = fdf->bsh - (fdf->y / fdf->n);    // C - Vertical Shift
-		while (fdf->x < WIDTH)
+		y = 0;
+		while (y < HEIGHT)
 		{
-			a = fdf->ash + (fdf->x / fdf->n);
-			x = 0;
-			y = 0;
+			a = ash + (x / n);
+			b = bsh - (y / n);
+			ca = a;
+			cb = b;
 			i = 1;
-			while (i <= 1000)
+			while (i <= iter)
 			{
-				t = x;
-				x = (x * x) - (y * y) + a;
-				y = (2 * t * y) + b;
-				if ((x * x) + (y * y) > 4)
-					break ;
+				aa = a * a - b * b;
+				bb = 2 * a * b;
+				a = aa + ca;
+				b = bb + cb;
+				if (a*a + b*b > 4)
+					break;
 				i++;
 			}
-			put_pxl(fdf, fdf->x, fdf->y, 0xFFFFFF - (int) (((double)i / 1000.0) * 0xFFFFFF));
-			if (i == 1001)
-				put_pxl(fdf, fdf->x, fdf->y, 0);
-
-			(fdf->x)++;
+			if (i == iter + 1)
+				put_pxl(fdf, x, y, 0);
+			else
+				put_pxl(fdf, x, y, 0xFFFFFF - (int) (((float)i / (float)iter) * 0xFFFFFF));
+			y++;
 		}
-		(fdf->y)++;
+		x++;
 	}
 	mlx_put_image_to_window(fdf->mlx, fdf->window, fdf->img, 0, 0);
 
