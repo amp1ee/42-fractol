@@ -88,7 +88,7 @@ t_mlx	*init_fdf(void)
 	window = mlx_new_window(mlx, WIDTH, HEIGHT, "Fils de fer");
 	fdf->mlx = mlx;
 	fdf->window = window;
-	fdf->img = mlx_new_image(fdf->mlx, WIDTH, HEIGHT);
+	fdf->img = mlx_new_image(mlx, WIDTH, HEIGHT);
 	fdf->pxl = mlx_get_data_addr(fdf->img, &(fdf->bpp), &(fdf->s_line), &(fdf->ed));
 	fdf->n = (double) HEIGHT / 2; // Size;
 	fdf->ash = -2;
