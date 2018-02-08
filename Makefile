@@ -1,10 +1,15 @@
 CC=gcc
 SRC=main.c
 OBJ=$(SRC:.c=.o)
-NAME=fdf
+NAME=fractol
 FLAGS=-Wall -Wextra -Werror
-MLXFLAGS=-lmlx -lXext -lX11
-LIBFLAGS=-lft -L../libft
+MLXFLAGS=-lmlx
+ifeq ($(shell uname -s), Linux)
+	MLXFLAGS += -lX11 -lXext
+else
+	MLXFLAGS += -framework OpenGL -framework AppKit
+endif
+LIBFLAGS=-lft -L../libft -lpthread
 MATH=-lm
 
 .PHONY: all clean fclean re
@@ -12,7 +17,7 @@ MATH=-lm
 all: $(NAME)
 
 $(OBJ): $(SRC)
-	gcc $(MLXFLAGS) $(LIBFLAGS) $(MATH) -c $(SRC) -o $(OBJ)
+	gcc -c $(SRC) -o $(OBJ)
 
 $(NAME): $(OBJ)
 	gcc $(OBJ) -o $(NAME) $(MLXFLAGS) $(MATH) $(LIBFLAGS)

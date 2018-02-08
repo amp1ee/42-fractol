@@ -6,21 +6,45 @@
 #include <pthread.h>
 #include "../libft/libft.h"
 
-#define 	WIDTH						600
-#define 	HEIGHT						400
-#define 	KB_Esc						0xff1b
-#define		KB_X						120
-#define		KB_Z						122
-#define 	KB_Up						65362
-#define		KB_Down						65364
-#define 	KB_Left						65361
-#define		KB_Right					65363
-#define 	KP_Add                      0xffab
-#define		KP_Subtract					0xffad
-#define 	KB_i                        0x0069
-#define		KB_u						0x0075
+# define 	WIDTH					1280
+# define 	HEIGHT					800
 
-#define		ITERATIONS					200
+#ifdef __linux__
+# define 	KB_ESC					0xff1b
+# define	KB_X					120
+# define	KB_Z					122
+# define 	KB_UP					65362
+# define	KB_DOWN					65364
+# define 	KB_LEFT					65361
+# define	KB_RIGHT				65363
+# define 	KP_ADD                  0xffab
+# define	KP_SUBTRACT				0xffad
+# define 	KB_I                    0x0069
+# define	KB_U					0x0075
+#elif __APPLE__
+# define KB_ESC						53
+# define KB_X						7
+# define KB_Z						6
+# define KB_UP						126
+# define KB_DOWN					125
+# define KB_LEFT					123
+# define KB_RIGHT					124
+# define KP_ADD						69
+# define KP_SUBTRACT				78
+# define KB_I						34
+# define KB_U						32
+# define KP_4						86
+# define KP_6						88
+# define KP_8						91
+# define KP_2						84
+# define KB_W						13
+# define KB_S						1
+# define KB_H						4
+#endif
+
+#define	ITERATIONS				500
+#define THREADS					16
+
 
 typedef struct	s_mlx
 {
@@ -36,47 +60,64 @@ typedef struct	s_mlx
 	float	ash;
 	float	bsh;
 	int		iter;
+
+	int		mx;
+	int		my;
+	int		parth;
 }				t_mlx;
 
-void	*draw(t_mlx *mlx_p);
+void	*draw(void *mlx_p);
+void	get_threads(t_mlx *fr);
+
+int		mouse_handler(int key, int mx, int my, void *p)
+{
+	t_mlx	*fract;
+
+	(void)key;
+	fract = (t_mlx *)p;
+	fract->mx = mx;
+	fract->my = my;
+	return (0);
+}
 
 int		key_handler(int keycode, void *param)
 {
-	t_mlx	*p;
+	t_mlx	*fract;
 	float	step;		
 
-	p = (t_mlx *)param;
-	printf("n = %d\n", p->n);
-	step = p->step;
-	if (keycode == KB_Esc)
+	fract = (t_mlx *)param;
+
+	step = fract->step;
+	if (keycode == KB_ESC)
 	{
 		printf("Escape\n");
-		mlx_destroy_window(p->mlx, p->window);
-		p = NULL;
+		mlx_destroy_window(fract->mlx, fract->window);
+		fract = NULL;
 		exit(0);
 	}
-	else if (keycode == KP_Add) // Heavy Plus
-		p->step *= 10;
-	else if (keycode == KP_Subtract) // Heavy Minus
-		p->step /= 10;
+	else if (keycode == KP_ADD) // Heavy Plus
+		fract->step *= 10;
+	else if (keycode == KP_SUBTRACT) // Heavy Minus
+		fract->step /= 10;
 	else if (keycode == KB_X)
-		(p->n) += 0.5 / step;
+		(fract->n) += 0.5 / step;
 	else if (keycode == KB_Z)
-		(p->n) -= 0.5 / step;
-	else if (keycode == KB_Right)
-		(p->ash) += step;
-	else if (keycode == KB_Left)
-		(p->ash) -= step;
-	else if (keycode == KB_Up)
-		(p->bsh) += step;
-	else if (keycode == KB_Down)
-		(p->bsh) -= step;
-	else if (keycode == KB_i)
-		p->iter *= 10;
-	else if (keycode == KB_u)
-		p->iter /= 10;
-	if (p && keycode != 65293)
-		draw(p);
+		(fract->n) -= 0.5 / step;
+	else if (keycode == KB_RIGHT)
+		(fract->ash) -= step;
+	else if (keycode == KB_LEFT)
+		(fract->ash) += step;
+	else if (keycode == KB_UP)
+		(fract->bsh) -= step;
+	else if (keycode == KB_DOWN)
+		(fract->bsh) += step;
+	else if (keycode == KB_I)
+		fract->iter = 1.1 * fract->iter;
+	else if (keycode == KB_U)
+		fract->iter = 0.9 * fract->iter;
+	if (fract && keycode != 65293)
+		get_threads(fract);
+	printf("%d\n", fract->iter);
 	return (0);
 }
 
@@ -85,59 +126,82 @@ int		rgb_to_int(int r, int g, int b)
 	return (65536 * (r % 256) + 256 * (g % 256) + b % 256);
 }
 
-t_mlx	*init_fdf(void)
+t_mlx	*init_fract(void)
 {
 	void		*mlx;
 	void		*window;
-	t_mlx		*fdf;
+	t_mlx		*fract;
 
-	if (!(fdf = (t_mlx *)malloc(sizeof(t_mlx))))
+	if (!(fract = (t_mlx *)malloc(sizeof(t_mlx))))
 		return (NULL);
 	mlx = mlx_init();
-	window = mlx_new_window(mlx, WIDTH, HEIGHT, "Fils de fer");
-	fdf->mlx = mlx;
-	fdf->window = window;
-	fdf->img = mlx_new_image(mlx, WIDTH, HEIGHT);
-	fdf->pxl = mlx_get_data_addr(fdf->img, &(fdf->bpp), &(fdf->s_line), &(fdf->ed));
-	fdf->n = (double) HEIGHT / 2; // Size;
-	fdf->ash = -2;
-	fdf->bsh = 2;
-	fdf->step = 0.05;
-	fdf->iter = ITERATIONS;
-	return (fdf);
+	window = mlx_new_window(mlx, WIDTH, HEIGHT, "Fract'ol");
+	fract->mlx = mlx;
+	fract->window = window;
+	fract->img = mlx_new_image(mlx, WIDTH, HEIGHT);
+	fract->pxl = mlx_get_data_addr(fract->img, &(fract->bpp), &(fract->s_line), &(fract->ed));
+	fract->n = (double) HEIGHT / 2;
+	fract->ash = -2;
+	fract->bsh = 2;
+	fract->step = 0.05;
+	fract->iter = ITERATIONS;
+	return (fract);
 }
 
 int		main(void)
 {
-	t_mlx		*fdf;
+	t_mlx		*fract;
 
-	fdf = init_fdf();
-	draw(fdf);
-	mlx_key_hook(fdf->window, &key_handler, fdf);
-	if (fdf)
-		mlx_loop(fdf->mlx);
+	fract = init_fract();
+	get_threads(fract);
+	mlx_hook(fract->window, 2, 5, &key_handler, fract);
+	mlx_mouse_hook(fract->window, &mouse_handler, fract);
+	if (fract)
+		mlx_loop(fract->mlx);
 	return (0);
 }
 
-void	put_pxl(t_mlx *e, int x, int y, unsigned int c)
+void	put_pxl(t_mlx *fract, int x, int y, unsigned int c)
 {
 	int		i;
 
-	if (x > WIDTH)
-		x = WIDTH;
-	if (y > HEIGHT)
-		y = HEIGHT;
-	if (x < 0)
-		x = 0;
-	if (y < 0)
-		y = 0;
-	i = (x * 4) + (y * e->s_line);
-	e->pxl[i] = c;
-	e->pxl[++i] = c >> 8;
-	e->pxl[++i] = c >> 16;
+	if (x >= WIDTH || y >= WIDTH || x < 0 || y < 0)
+		return ;
+	i = (x * 4) + (y * fract->s_line);
+	fract->pxl[i] = c;
+	fract->pxl[++i] = c >> 8;
+	fract->pxl[++i] = c >> 16;
 }
 
-void	*draw(t_mlx *fdf)
+int		interp_i(int start, int end, double perc)
+{
+	int		res;
+
+	if (start == end)
+		return (start);
+	if (perc == 1.0)
+		return (end);
+	else if (perc == 0.0)
+		return (start);
+	res = (1 - perc) * start + perc * end;
+//	printf("start=%d perc=%.3f res=%d\n", start, perc, res);
+	return (res);
+}
+
+int		interp_color(int c1, int c2, float perc)
+{
+	int		r;
+	int		g;
+	int		b;
+
+	r = interp_i(c1 >> 16, c2 << 16, perc);
+	g = interp_i((c1 >> 8) & 0xFF, (c2 >> 8) & 0xFF, perc);
+	b = interp_i(c1 & 0xFF, c2 & 0xFF, perc);
+	
+	return ((r << 16) | (g << 8) | b);
+}
+
+void	*draw(void *fr)
 {
 	int		i;
 	int		x, y;
@@ -145,16 +209,17 @@ void	*draw(t_mlx *fdf)
 	double	a, b, aa, bb, n;
 	double	ca, cb;
 	int		iter;
+	t_mlx	*fract = (t_mlx *)fr;
 
 	x = 0;
-	ash = fdf->ash;
-	bsh = fdf->bsh;
-	n = fdf->n;
-	iter = fdf->iter;
+	ash = fract->ash;
+	bsh = fract->bsh;
+	n = fract->n;
+	iter = fract->iter;
 	while (x < WIDTH)
 	{
-		y = 0;
-		while (y < HEIGHT)
+		y = fract->parth;
+		while (y < fract->parth + HEIGHT / THREADS)
 		{
 			a = ash + (x / n);
 			b = bsh - (y / n);
@@ -172,14 +237,111 @@ void	*draw(t_mlx *fdf)
 				i++;
 			}
 			if (i == iter + 1)
-				put_pxl(fdf, x, y, 0);
+				put_pxl(fract, x, y, 0);
 			else
-				put_pxl(fdf, x, y, 0xFFFFFF - (int) (((float)i / (float)iter) * 0xFFFFFF));
+//				put_pxl(fract, x, y, 0xFFFFFF - (int) (((float)i / (float)iter) * 0xd4c2e0));
+				put_pxl(fract, x, y, interp_color(0xFADCAB, 0x55CCAA, ((float)i / (float)iter)));
 			y++;
 		}
 		x++;
 	}
-	mlx_put_image_to_window(fdf->mlx, fdf->window, fdf->img, 0, 0);
-
 	return (NULL);
 }
+
+float		map(float value, float a0, float a1, float b0, float b1)
+{
+	float	perc;
+
+	if (a0 == a1 || b0 == b1)
+		return (b0);
+	perc = value / (a1 - a0);
+	if (perc == 0.0)
+		return (b0);
+	if (perc == 1.0)
+		return (b1);
+	return ((1 - perc) * b0 + perc * b1);
+}
+
+
+void		get_threads(t_mlx *fr)
+{
+	pthread_t		thr[THREADS];
+	t_mlx			frax[THREADS];
+	int				i;
+	int				part;
+
+	i = 0;
+	int y = 0;
+	while (i < THREADS)
+	{	
+		frax[i] = *fr;
+		frax[i].parth = y;
+		y = map(i + 1, 0, THREADS, 0, HEIGHT);
+		pthread_create(&thr[i], NULL, draw, (void *)&frax[i]);
+		i++;
+	}
+	while (i-- > 0)
+		pthread_join(thr[i], NULL);
+	mlx_put_image_to_window(fr->mlx, fr->window, fr->img, 0, 0);
+
+}
+/*
+void threads_create(t_map *map)
+{
+ pthread_t threads[THREADS];
+ t_map  info[THREADS];
+ unsigned y;
+ int   i;
+ char  *str;
+
+ i = -1;
+ y = 0;
+ while (++i < THREADS)
+ {
+  info[i] = *map;
+  info[i].cunt = y;
+  y += HEIGHT / THREADS;
+  info[i].end = y;
+  pthread_create(&threads[i], NULL,
+        (void *(*)(void *))draw, (void *)&info[i]);
+ }
+ while (i-- > 0)
+  map->status = pthread_join(threads[i], (void**)&map->status_addr);
+ mlx_put_image_to_window(map->mlx, map->win, map->image_ptr, 0, 0);
+ mlx_string_put(map->mlx, map->win, 10, 10, 0xFF0000,
+        (str = ft_itoa(map->fps.frame_time)));
+ ft_strdel(&str);
+}
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
