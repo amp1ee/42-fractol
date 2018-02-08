@@ -64,16 +64,29 @@ typedef struct	s_mlx
 	int		mx;
 	int		my;
 	int		parth;
+	time_t	time;
 }				t_mlx;
 
 void	*draw(void *mlx_p);
 void	get_threads(t_mlx *fr);
 
-int		mouse_handler(int key, int mx, int my, void *p)
+int		mouse_handler(int mx, int my, void *p)
 {
 	t_mlx	*fract;
 
-	(void)key;
+	printf("T1 %ld\n", fract->time);
+	if (fract->time == time(NULL))
+	{
+		printf("RET\n");
+		return (0);
+	}
+	else
+	{
+		printf("GO ON\n");
+		fract->time = time(NULL);
+	}
+	printf("Motion at %d, %d\n", mx, my);
+	printf("T2 %ld\n", fract->time);
 	fract = (t_mlx *)p;
 	fract->mx = mx;
 	fract->my = my;
@@ -155,7 +168,9 @@ int		main(void)
 	fract = init_fract();
 	get_threads(fract);
 	mlx_hook(fract->window, 2, 5, &key_handler, fract);
-	mlx_mouse_hook(fract->window, &mouse_handler, fract);
+
+	fract->time = time(NULL);
+	mlx_hook(fract->window, 6, (1L<<6), &mouse_handler, fract);
 	if (fract)
 		mlx_loop(fract->mlx);
 	return (0);
@@ -211,14 +226,14 @@ void	*draw(void *fr)
 	int		iter;
 	t_mlx	*fract = (t_mlx *)fr;
 
-	x = 0;
+	x = 0 + fract->mx;
 	ash = fract->ash;
 	bsh = fract->bsh;
 	n = fract->n;
 	iter = fract->iter;
 	while (x < WIDTH)
 	{
-		y = fract->parth;
+		y = fract->parth + fract->my;
 		while (y < fract->parth + HEIGHT / THREADS)
 		{
 			a = ash + (x / n);
@@ -237,10 +252,10 @@ void	*draw(void *fr)
 				i++;
 			}
 			if (i == iter + 1)
-				put_pxl(fract, x, y, 0);
+				put_pxl(fract, x - fract->mx, y - fract->my, 0);
 			else
 //				put_pxl(fract, x, y, 0xFFFFFF - (int) (((float)i / (float)iter) * 0xd4c2e0));
-				put_pxl(fract, x, y, interp_color(0xFADCAB, 0x55CCAA, ((float)i / (float)iter)));
+				put_pxl(fract, x - fract->mx, y - fract->my, interp_color(0xFADCAB, 0x55CCAA, ((float)i / (float)iter)));
 			y++;
 		}
 		x++;
