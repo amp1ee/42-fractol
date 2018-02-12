@@ -1,5 +1,5 @@
 CC=gcc
-SRC=main.c
+SRC=main.c matrix.c transform.c vectors.c
 OBJ=$(SRC:.c=.o)
 NAME=fractol
 FLAGS=-Wall -Wextra -Werror
@@ -17,8 +17,8 @@ MATH=-lm
 
 all: $(NAME)
 
-$(OBJ): $(SRC)
-	gcc -c $(SRC) -o $(OBJ)
+%.o: %.c
+	gcc -c $^ -o $@
 
 $(NAME): $(OBJ) libmlx.a
 	gcc $(OBJ) -o $(NAME) $(MLXFLAGS) $(MATH) $(LIBFLAGS)

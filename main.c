@@ -13,11 +13,11 @@ int		mouse_handler(int key, int mx, int my, void *p)
 	t_mlx	*fract;
 
 	fract = (t_mlx *)p;
-	if (key == 1)
+/*	if (key == 1)
 	{
 		fract->ash = ft_map(mx + WIDTH/2, 0, WIDTH, 2, -2);
 		fract->bsh = ft_map(my + HEIGHT/2, 0, HEIGHT, -2, 2);
-	}
+	}*/
 	if (key == 4)
 	{
 		fract->n += 0.5 / fract->step;
@@ -168,8 +168,7 @@ void	*draw(void *fr)
 	iter = fract->iter;
 	while (x < WIDTH)
 	{
-		y = fract->parth;// + fract->my;
-		//printf("%d\n",fract->my);
+		y = fract->parth;
 		while (y < fract->parth + HEIGHT / THREADS)
 		{
 			a = ash + (x / n);
@@ -190,8 +189,8 @@ void	*draw(void *fr)
 			if (i == iter + 1)
 				put_pxl(fract, x, y, 0);
 			else
-//				put_pxl(fract, x, y, 0xFFFFFF - (int) (((float)i / (float)iter) * 0xd4c2e0));
-				put_pxl(fract, x, y, interp_color(0xFADCAB, 0x55CCAA, ((float)i / (float)iter)));
+				put_pxl(fract, x, y, 0xFFFFFF - (int) (((float)i / (float)iter) * 0xd4c2e0));
+//				put_pxl(fract, x, y, interp_color(0xFADCAB, 0x55CCAA, ((float)i / (float)iter)));
 			y++;
 		}
 		x++;
@@ -202,26 +201,24 @@ void	*draw(void *fr)
 void		get_threads(t_mlx *fr)
 {
 	pthread_t		thr[THREADS];
-	t_mlx			frax[THREADS];
+	t_mlx			frx[THREADS];
 	int				i;
 	int				part;
+	int				y;
 
 	i = 0;
-	int y = 0;
+	y = 0;
 	while (i < THREADS)
 	{	
-		frax[i] = *fr;
-		frax[i].parth = y;
+		frx[i] = *fr;
+		frx[i].parth = y;
 		y = ft_map(i + 1, 0, THREADS, 0, HEIGHT);
-		pthread_create(&thr[i], NULL, draw, (void *)&frax[i]);
+		pthread_create(&thr[i], NULL, draw, (void *)&frx[i]);
 		i++;
 	}
 	while (i-- > 0)
-	{
 		pthread_join(thr[i], NULL);
-	}
 	mlx_put_image_to_window(fr->mlx, fr->window, fr->img, 0, 0);
-
 }
 
 /*

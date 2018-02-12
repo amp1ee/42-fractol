@@ -41,24 +41,64 @@
 # include <pthread.h>
 # include "../libft/libft.h"
 
+# define PI 3.141592654
+
 typedef struct	s_mlx
 {
-	void	*mlx;
-	void	*window;
-	void	*img;
-	char	*pxl;
-	int		bpp;
-	int		s_line;
-	int		ed;
-	int		n;
-	float	step;
-	float	ash;
-	float	bsh;
-	int		iter;
+	void		*mlx;
+	void		*window;
+	void		*img;
+	char		*pxl;
+	int			bpp;
+	int			s_line;
+	int			ed;
+	int			n;
+	float		step;
+	double		ash;
+	double		bsh;
+	int			iter;
 
-	int		mx;
-	int		my;
-	int		parth;
+	int			mx;
+	int			my;
+	int			parth;
 }				t_mlx;
+
+typedef struct	s_vector
+{
+	double		x;
+	double		y;
+}				t_vector;
+
+typedef struct	s_matrix
+{
+	double		x[3];
+	double		y[3];
+	double		w[3];
+}				t_matrix;
+
+typedef struct	s_transform
+{
+	t_vector	trnsl;
+	t_vector	rotat;
+	t_vector	scale;
+	t_matrix	t_mtrx;
+}				t_transform;
+
+t_transform		*init_transform(double x, double y, double w);
+t_vector		*new_vector(double x, double y);
+t_matrix		*new_matrix(void);
+
+t_vector		*vrotat(double angle, t_vector v);
+t_vector		*vnormal(t_vector *v);
+double			vlength(t_vector v);
+double			vdot(t_vector v0, t_vector v1);
+t_vector		*vadd_v(t_vector v0, t_vector v1);
+t_vector		*vadd_d(t_vector v, double d);
+t_vector		*vsub_v(t_vector v0, t_vector v1);
+t_vector		*vsub_d(t_vector v, double d);
+t_vector		*vmul_v(t_vector v0, t_vector v1);
+t_vector		*vmul_d(t_vector v, double d);
+t_vector		*vdiv_v(t_vector v0, t_vector v1);
+t_vector		*vdiv_d(t_vector v, double d);
 
 #endif
