@@ -1,32 +1,42 @@
-CC=gcc
-SRC=main.c matrix.c transform.c vectors.c
-OBJ=$(SRC:.c=.o)
-NAME=fractol
-FLAGS=-Wall -Wextra -Werror
-MLXDIR=./minilibx/
-MLXFLAGS=-lmlx -L$(MLXDIR)
+NAME		= fractol
+CC			= gcc
+SRCDIR		= ./src/
+SRC			= $(addprefix $(SRCDIR), \
+					main.c \
+					controls.c)
+OBJDIR		= ./obj/
+OBJ			= $(SRC:$(SRCDIR)%.c=$(OBJDIR)%.o)
+FLAGS		= -Wall -Wextra -Werror -O3
+MLXDIR		= ./minilibx
+MLXLIB		= libmlx.a
+MLX			= -lmlx -L$(MLXDIR)
+
 ifeq ($(shell uname -s), Linux)
-	MLXFLAGS += -lX11 -lXext
+  MLX		+= -lX11 -lXext
 else
-	MLXFLAGS += -framework OpenGL -framework AppKit
+  MLX		+= -framework OpenGL -framework AppKit
 endif
-LIBFLAGS=-lft -L../libft -lpthread
-MATH=-lm
+
+LIBFT		= -lft -L../libft
+MULTHREAD	= -pthread
+MATHLIB		= -lm
+INCL		= fractol.h
 
 .PHONY: all clean fclean re
 
 all: $(NAME)
 
-%.o: %.c
-	gcc -c $^ -o $@
+$(OBJDIR)%.o: $(SRCDIR)%.c $(INCL)
+	@mkdir -p $(OBJDIR)
+	gcc $(FLAGS) -c $< -o $@ -I.
 
-$(NAME): $(OBJ) libmlx.a
-	gcc $(OBJ) -o $(NAME) $(MLXFLAGS) $(MATH) $(LIBFLAGS)
-libmlx.a:
-	make -C $(MLXDIR)
+$(NAME): $(OBJ) $(MLXDIR)/$(MLXLIB)
+	gcc $(OBJ) -o $(NAME) $(MLX) $(MATHLIB) $(MULTHREAD) $(LIBFT)
+$(MLXLIB):
+	@printf "Compiling libmlx.a\n"
+	@make -sC $(MLXDIR)
 clean:
-	rm -f $(OBJ)
-
+	rm -rf $(OBJDIR)
 fclean: clean
 	rm -f $(NAME)
 
