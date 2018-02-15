@@ -38,9 +38,9 @@
 #  define KB_H					4
 # endif
 
-/*								DELETE!										*/
+/*	------------------------  DELETE!  -----------------------------------	*/
 # include <stdio.h>
-/*								DELETE!										*/
+/*	------------------------  DELETE!  -----------------------------------	*/
 
 # include "minilibx/mlx.h"
 # include <math.h>
@@ -57,12 +57,12 @@
 # define PCREA_ERR "ERROR: pthread_create() returned "
 # define PJOIN_ERR "ERROR: pthread_join() returned "
 
-#define WIDTH					1200
-#define HEIGHT					800
+#define WIDTH					720
+#define HEIGHT					480
 #define	ITERATIONS				50
 #define THREADS					24
 
-typedef struct	s_mlx
+typedef struct	s_fractol
 {
 	void		*mlx;
 	void		*win;
@@ -80,12 +80,17 @@ typedef struct	s_mlx
 	int			iter;
 	int			i;
 	int			parth;
-	}			t_mlx;
 
-void			*drawthr(void *mlx_p);
-void			get_threads(t_mlx *fr);
-void			*exiterror(char *reason, t_mlx *fr);
-int				key_handler(int keycode, void *param);
-int				mouse_handler(int key, int mx, int my, void *p);
+	double		mx;
+	double		my;
+}				t_fractol;
+
+void			*drawthr(void *frac_p);
+void			get_threads(t_fractol *fr);
+void			*exiterror(char *reason, t_fractol *fr);
+int				key_handler(int keycode, void *fractol);
+int				mouse_handler(int key, int mx, int my, void *fractol);
+
+int				interp_color(int c1, int c2, float perc);
 
 #endif

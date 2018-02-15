@@ -3,7 +3,8 @@ CC			= gcc
 SRCDIR		= ./src/
 SRC			= $(addprefix $(SRCDIR), \
 					main.c \
-					controls.c)
+					controls.c \
+					draw.c)
 OBJDIR		= ./obj/
 OBJ			= $(SRC:$(SRCDIR)%.c=$(OBJDIR)%.o)
 FLAGS		= -Wall -Wextra -Werror -O3
