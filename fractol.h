@@ -80,9 +80,12 @@ typedef struct	s_fractol
 	int			iter;
 	int			i;
 	int			parth;
+	int			hstep;
 
-	double		mx;
-	double		my;
+	int			centerx;
+	int			centery;
+	int			mx;
+	int			my;
 }				t_fractol;
 
 void			*drawthr(void *frac_p);

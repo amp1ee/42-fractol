@@ -36,23 +36,70 @@ static void	put_pxl(t_fractol *fr, int x, int y, unsigned int c)
 
 void		*drawthr(void *fract)
 {
-	int		i;
-	int		x, y;
-	float	ash, bsh;
-	double	a, b, aa, bb, n;
-	double	ca, cb;
-	int		iter;
+	int			i;
+	int			x, y;
+	float		ash, bsh;
+	double		a, b, aa, bb, n;
+	double		ca, cb;
+	int			iter;
 	t_fractol	*fr = (t_fractol *)fract;
 
-	x = -WIDTH / 2; 
+	x = 0;
 	ash = fr->ash;
 	bsh = fr->bsh;
 	n = fr->n;
 	iter = fr->iter;
-	while (x < WIDTH / 2)
+	while (x < WIDTH)
 	{
-		y = fr->parth - HEIGHT /2;
-		while (y <= fr->parth + HEIGHT / THREADS - HEIGHT /2)
+		y = fr->parth;
+		while (y <= fr->parth + fr->hstep)
+		{
+			a = ash + ((x - fr->centerx) / n);
+			b = bsh - ((y - fr->centery) / n);
+			ca = a;
+			cb = b;
+			i = 0;
+			while (i < iter && (a * a + b * b) <= 4)
+			{
+				aa = a * a - b * b;
+				bb = 2 * a * b;
+				a = aa + ca;
+				b = bb + cb;
+				i++;
+			}
+			if (i == iter)
+				put_pxl(fr, x, y, BLACK);
+			else
+				put_pxl(fr, x, y,
+					interp_color(0x45145A, 0xFF5300, ((float)i / iter)));
+			y++;
+		}
+		x++;
+	}
+	pthread_exit(0);
+	return (NULL);
+}
+
+/*
+void		*drawthr(void *fract)
+{
+	int			i;
+	int			x, y;
+	float		ash, bsh;
+	double		a, b, aa, bb, n;
+	double		ca, cb;
+	int			iter;
+	t_fractol	*fr = (t_fractol *)fract;
+	
+	x = 0;
+	ash = fr->ash;
+	bsh = fr->bsh;
+	n = fr->n;
+	iter = fr->iter;
+	while (x < WIDTH)
+	{
+		y = fr->parth;
+		while (y <= fr->parth + HEIGHT / THREADS)
 		{
 			a = ash + (x / n);
 			b = bsh - (y / n);
@@ -68,9 +115,10 @@ void		*drawthr(void *fract)
 				i++;
 			}
 			if (i == iter)
-				put_pxl(fr, x + WIDTH/2, y + HEIGHT/2, BLACK);
+				put_pxl(fr, x, y, BLACK);
 			else
-				put_pxl(fr, x + WIDTH/2, y + HEIGHT/2, interp_color(0x45145A, 0xFF5300, ((float)i / iter)));
+				put_pxl(fr, x, y,
+					interp_color(0x45145A, 0xFF5300, ((float)i / iter)));
 			y++;
 		}
 		x++;
@@ -78,6 +126,7 @@ void		*drawthr(void *fract)
 	pthread_exit(0);
 	return (NULL);
 }
+*/
 
 void		get_threads(t_fractol *fr)
 {
@@ -87,6 +136,8 @@ void		get_threads(t_fractol *fr)
 	int				ret;
 	int				y;
 
+	fr->centerx = WIDTH / 2;
+	fr->centery = HEIGHT / 2;
 	i = 0;
 	y = 0;
 	while (i < THREADS)

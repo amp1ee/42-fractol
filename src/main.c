@@ -29,6 +29,7 @@ t_fractol	*init_fractol(char *title)
 	fr->ash = -0.5;
 	fr->bsh = 0;
 	fr->step = 0.05;
+	fr->hstep = HEIGHT / THREADS;
 	fr->iter = ITERATIONS;
 	return (fr);
 }

@@ -19,8 +19,8 @@ static void	countzooms(t_fractol *fr, char action)
 void		reset_fractol(t_fractol *fr)
 {
 	fr->n = (double) HEIGHT / 2;
-	fr->ash = -2;
-	fr->bsh = 1;
+	fr->ash = -0.5;
+	fr->bsh = 0;
 	fr->step = 0.05;
 	fr->iter = ITERATIONS;
 }
@@ -71,34 +71,20 @@ int			key_handler(int key, void *param)
 	else if (key == KB_R)
 		reset_fractol(fr);
 	get_threads(fr);
-	printf("%.3f %.3f\n", fr->ash, fr->bsh);
+	//printf("%.3f %.3f\n", fr->ash, fr->bsh);
 	return (0);
 }
-
-typedef struct	s_vector
-{
-	double x;
-	double y;
-}				t_vector;
-
-const t_vector	relim = {
-	.x = -5,
-	.y = 1
-};
-const t_vector	imlim = {
-	.x = -1,
-	.y = 3
-};
 
 int			mouse_handler(int key, int mx, int my, void *p)
 {
 	t_fractol	*fr;
 
 	fr = (t_fractol *)p;
-	fr->mx = mx;
-	fr->my = my;
+	//(void)mx, (void)my;
 	if (key == 4 || key == 5)
 	{
+		fr->mx = mx;
+		fr->my = my;
 		if (key == 4)
 		{
 			fr->n += 0.5 / fr->step;
