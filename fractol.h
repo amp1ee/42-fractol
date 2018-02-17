@@ -61,6 +61,7 @@
 #define HEIGHT					480
 #define	ITERATIONS				50
 #define THREADS					12
+#define TOLER					1e-6
 
 typedef struct	s_complex
 {

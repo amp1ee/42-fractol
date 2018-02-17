@@ -9,17 +9,6 @@ t_complex	compl(double re, double im)
 	return (new);
 }
 
-t_complex	*ncompl(double re, double im)
-{
-	t_complex	*new;
-
-	if (!(new = malloc(sizeof(t_complex))))
-		return (NULL);
-	new->re = re;
-	new->im = im;
-	return (new);
-}
-
 t_complex	cx_add(t_complex c0, t_complex c1)
 {
 	return (compl(c0.re + c1.re, c0.im + c1.im));
@@ -67,10 +56,3 @@ t_complex	cx_conj(t_complex c)
 {
 	return (compl(c.re, c.im * -1));
 }
-/*
-int		main(void)
-{
-	t_complex c = compl(2, 3);
-	c = cx_pow(c, 3);
-	printf("%f %f\n", c.re, c.im);
-}*/

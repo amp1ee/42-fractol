@@ -4,6 +4,7 @@ static void	zoom(t_fractol *fr, char action)
 {
 	if (action == '+')
 	{
+		
 		fr->zoom *= 1.05;
 		if (fr->iter < 9999)
 				fr->iter++;

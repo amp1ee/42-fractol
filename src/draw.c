@@ -19,7 +19,7 @@ void		print_info(t_fractol *fr)
 		i = 2;
 	snprintf(frstep, len + 3, "%.3f%s", prefix[i] * fr->step, str[i]);
 	mlx_string_put(fr->mlx, fr->win, 20, 40, WHITE, frstep);
-
+	ft_strdel(&frstep);
 }
 
 void		put_pxl(t_fractol *fr, int x, int y, unsigned int c)
@@ -82,51 +82,3 @@ void		get_threads(t_fractol *fr)
 	mlx_string_put(fr->mlx, fr->win, 20, 20, WHITE, ft_itoa(fr->iter));
 	print_info(fr);
 }
-
-/*
-void		*drawthr(void *fract)
-{
-	int			i;
-	int			x, y;
-	float		reoff, imoff;
-	double		a, b, aa, bb, n;
-	double		ca, cb;
-	int			iter;
-	t_fractol	*fr = (t_fractol *)fract;
-	
-	x = 0;
-	ash = fr->ash;
-	bsh = fr->bsh;
-	n = fr->zoom;
-	iter = fr->iter;
-	while (x < WIDTH)
-	{
-		y = fr->parth;
-		while (y <= fr->parth + HEIGHT / THREADS)
-		{
-			a = ash + (x / n);
-			b = bsh - (y / n);
-			ca = a;
-			cb = b;
-			i = 0;
-			while (i < iter && (a * a + b * b) <= 4)
-			{
-				aa = a * a - b * b;
-				bb = 2 * a * b;
-				a = aa + ca;
-				b = bb + cb;
-				i++;
-			}
-			if (i == iter)
-				put_pxl(fr, x, y, BLACK);
-			else
-				put_pxl(fr, x, y,
-					interp_color(0x45145A, 0xFF5300, ((float)i / iter)));
-			y++;
-		}
-		x++;
-	}
-	pthread_exit(0);
-	return (NULL);
-}
-*/
