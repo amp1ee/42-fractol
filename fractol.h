@@ -60,7 +60,13 @@
 #define WIDTH					720
 #define HEIGHT					480
 #define	ITERATIONS				50
-#define THREADS					24
+#define THREADS					12
+
+typedef struct	s_complex
+{
+	double		re;
+	double		im;
+}				t_complex;
 
 typedef struct	s_fractol
 {
@@ -71,21 +77,18 @@ typedef struct	s_fractol
 	int			bpp;
 	int			s_line;
 	int			ed;
-	double		n;
+	double		zoom;
 	float		step;
-	double		ash;
-	double		bsh;
-	double		ref;
-	double		imf;
+	double		reoff;
+	double		imoff;
+	void		(*fun)();
 	int			iter;
-	int			i;
 	int			parth;
+	t_complex	c;
 	int			hstep;
-
-	int			centerx;
-	int			centery;
-	int			mx;
-	int			my;
+	double		centerx;
+	double		centery;
+	char		julia;
 }				t_fractol;
 
 void			*drawthr(void *frac_p);
@@ -95,5 +98,10 @@ int				key_handler(int keycode, void *fractol);
 int				mouse_handler(int key, int mx, int my, void *fractol);
 
 int				interp_color(int c1, int c2, float perc);
+void			mandelbrot(t_fractol *fr, int x, int y);
+void	julia(t_fractol *fr, int x, int y);
+void	newton(t_fractol *fr, int x, int y);
+
+void			put_pxl(t_fractol *fr, int x, int y, unsigned int c);
 
 #endif

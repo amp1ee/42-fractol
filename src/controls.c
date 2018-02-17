@@ -1,26 +1,26 @@
 #include "../fractol.h"
 
-static void	countzooms(t_fractol *fr, char action)
+static void	zoom(t_fractol *fr, char action)
 {
-	if (action == '+' && fr->i < 9999)
+	if (action == '+')
 	{
-		fr->i++;
-		if (fr->step > 0.0001)
-			fr->step *= 0.995f;
+		fr->zoom *= 1.05;
+		if (fr->iter < 9999)
+				fr->iter++;
 	}
-	else if (action == '-' && fr->i > 50)
+	else if (action == '-')
 	{	
-		fr->i--;
-		if (fr->step < 10)
-			fr->step *= 1.005f;
+		fr->zoom *= 0.95;
+		if (fr->iter > 50)
+				fr->iter--;
 	}
 }
 
 void		reset_fractol(t_fractol *fr)
 {
-	fr->n = (double) HEIGHT / 2;
-	fr->ash = -0.5;
-	fr->bsh = 0;
+	fr->zoom = (double) HEIGHT / 2;
+	fr->reoff = -3;
+	fr->imoff = -2;
 	fr->step = 0.05;
 	fr->iter = ITERATIONS;
 }
@@ -43,27 +43,17 @@ int			key_handler(int key, void *param)
 	else if (key == KP_SUBTRACT)
 		fr->step /= 10;
 	else if (key == KB_X)
-	{
-		(fr->n) += 0.5 / step;
-		countzooms(fr, '+');
-		if ((fr->i % 20) == 0 && fr->iter < 9999)
-			fr->iter++;
-	}
+		zoom(fr, '+');
 	else if (key == KB_Z)
-	{
-		(fr->n) -= 0.5 / step;
-		countzooms(fr, '-');
-		if ((fr->i % 20) == 0 && fr->iter > 50)
-			fr->iter--;
-	}
+		zoom(fr, '-');
 	else if (key == KB_RIGHT)
-		(fr->ash) -= step;
+		(fr->reoff) -= step;
 	else if (key == KB_LEFT)
-		(fr->ash) += step;
+		(fr->reoff) += step;
 	else if (key == KB_UP)
-		(fr->bsh) -= step;
+		(fr->imoff) -= step;
 	else if (key == KB_DOWN)
-		(fr->bsh) += step;
+		(fr->imoff) += step;
 	else if (key == KB_I && (1.05 * fr->iter) < 9999)
 		fr->iter *= 1.05;
 	else if (key == KB_U && (0.95 * fr->iter) > 50)
@@ -71,35 +61,29 @@ int			key_handler(int key, void *param)
 	else if (key == KB_R)
 		reset_fractol(fr);
 	get_threads(fr);
-	//printf("%.3f %.3f\n", fr->ash, fr->bsh);
 	return (0);
 }
 
 int			mouse_handler(int key, int mx, int my, void *p)
 {
 	t_fractol	*fr;
+	t_complex	corr;
+	double		d;
 
 	fr = (t_fractol *)p;
-	//(void)mx, (void)my;
+	d =  2 * HEIGHT / fr->zoom;
 	if (key == 4 || key == 5)
 	{
-		fr->mx = mx;
-		fr->my = my;
+		corr.re = fr->reoff + ((float)mx / WIDTH) * d * 1.5;
+		corr.im = fr->imoff + ((HEIGHT - (float)my) / HEIGHT) * d;
 		if (key == 4)
-		{
-			fr->n += 0.5 / fr->step;
-			countzooms(fr, '+');
-			if ((fr->i % 20) == 0 && fr->iter < 9999)
-				fr->iter++;
-		}
+			zoom(fr, '+');
 		if (key == 5)
-		{
-			fr->n -= 0.5 / fr->step;
-			countzooms(fr, '-');
-			if ((fr->i % 20) == 0 && fr->iter > 50)
-				fr->iter--;
-		}
-		get_threads(fr);
+			zoom(fr, '-');	
+		d = 2 * HEIGHT / fr->zoom;
+		fr->reoff = corr.re - ((float)mx / WIDTH) * d * 1.5;
+		fr->imoff = corr.im - ((HEIGHT - (float)my) / HEIGHT) * d;
 	}
+	get_threads(fr);
 	return (0);
 }

@@ -4,7 +4,8 @@ SRCDIR		= ./src/
 SRC			= $(addprefix $(SRCDIR), \
 					main.c \
 					controls.c \
-					draw.c)
+					draw.c \
+					functions.c)
 OBJDIR		= ./obj/
 OBJ			= $(SRC:$(SRCDIR)%.c=$(OBJDIR)%.o)
 FLAGS		= -Wall -Wextra -Werror -O3
