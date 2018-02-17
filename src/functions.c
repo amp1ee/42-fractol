@@ -1,13 +1,13 @@
 #include "fractol.h"
 
-void	julia(t_fractol *fr, int x, int y)
+void		julia(t_fractol *fr, int x, int y)
 {
 	fr->c.re = -0.123;
 	fr->c.im = 0.745;
 	mandelbrot(fr, x, y);
 }
 
-void	mandelbrot(t_fractol *fr, int x, int y)
+void		mandelbrot(t_fractol *fr, int x, int y)
 {
 	t_complex	a;
 	t_complex	aa;
@@ -32,58 +32,71 @@ void	mandelbrot(t_fractol *fr, int x, int y)
 			interp_color(0x45145A, 0xFF5300, ((float)(fr->iter - i) / fr->iter)));
 /*	else if (i > 0.8 * fr->iter)
 		put_pxl(fr, x, y, 0xFF5300 - ((float)(fr->iter - i) / fr->iter) * 0xFF5300);
-	*/
+*/
 }
 
-t_complex	compl(double re, double im)
+#define H 1e-8
+
+t_complex	cx_func(t_complex z)
 {
-	t_complex	new;
-
-	new.re = re;
-	new.im = im;
-	return (new);
+	z = cx_sub(cx_pow(z, 3), compl(1, 0));
+	return (z);
 }
 
-void	newton(t_fractol *fr, int x, int y)
+t_complex	cx_prederiv(t_complex z)
+{
+	z = cx_add(z, compl(H, 0));
+	return (cx_func(z));
+}
+
+t_complex	cx_deriv(t_complex z)
+{
+	t_complex	c;
+
+	c = cx_prederiv(z);
+	c = cx_sub(c, cx_func(z));
+	c = cx_mul_sc(c, (1.0 / H));
+	return (c);
+}
+
+void		newton(t_fractol *fr, int x, int y)
 {
 	t_complex	z;
-	int			i;
-	double		a, b;
 
-	t_complex roots[3] = //Roots (solutions) of the polynomial
+	t_complex roots[3] =
 	{
-		compl(1, 0), 
-		compl(-0.5, sqrt(3)/2), 
+		compl(1, 0),
+		compl(-0.5, sqrt(3)/2),
 		compl(-0.5, -sqrt(3)/2)
 	};
-	int colors[3] = 
+	int colors[3] =
 	{
 		0xFF0000,
-		0xFF00, 
+		0xFF00,
 		0xFF
 	};
-
 	z.re = ft_map(x, 0, WIDTH, -2.5, 1);
 	z.im = ft_map(y, 0, HEIGHT, -1, 1);
-	i = fr->iter;
-	double tol = 0.000001;
+	int i = 500; //fr->iter;
+	double tol = 1e-6;
 	while ((i--) > 0)
 	{
-		a = z.re;
-		b = z.im;
-		z.re -= ((a*a*a - 3*a*b*b) - 1) / (3 * (a*a - b*b));
-		z.im -= (3*a*a*b - b*b*b) / (6 * a*b);
+		t_complex der = cx_deriv(z);
+		t_complex fun = cx_func(z);
+		z = cx_sub(z, cx_div(fun, der));
 		int j = 0;
 		while (j < 3)
 		{
 			t_complex diff = compl(z.re - roots[j].re, z.im - roots[j].im);
-			if (abs(diff.re) < tol && abs(diff.im) < tol)
+			if (fabs(diff.re) < tol && fabs(diff.im) < tol)
 			{
 				put_pxl(fr, x, y, colors[j]);
-				return ;
+				i = -2;
+				break ;
 			}
 			j++;
 		}
 	}
-	put_pxl(fr, x, y, BLACK);
+	if (i == -1)
+		put_pxl(fr, x, y, BLACK);
 }

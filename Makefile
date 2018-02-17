@@ -5,22 +5,23 @@ SRC			= $(addprefix $(SRCDIR), \
 					main.c \
 					controls.c \
 					draw.c \
-					functions.c)
+					functions.c \
+					complex.c)
 OBJDIR		= ./obj/
 OBJ			= $(SRC:$(SRCDIR)%.c=$(OBJDIR)%.o)
 FLAGS		= -Wall -Wextra -Werror -O3
 MLXDIR		= ./minilibx
 MLXLIB		= libmlx.a
-MLX			= -lmlx -L$(MLXDIR)
+MLX			= -lmlx
 
 ifeq ($(shell uname -s), Linux)
-  MLX		+= -lX11 -lXext
+  MLX		+= -lX11 -lXext -L$(MLXDIR)
+  MULTHREAD	= -pthread
 else
   MLX		+= -framework OpenGL -framework AppKit
 endif
 
 LIBFT		= -lft -L../libft
-MULTHREAD	= -pthread
 MATHLIB		= -lm
 INCL		= fractol.h
 
