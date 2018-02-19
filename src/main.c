@@ -31,6 +31,7 @@ t_fractol	*init_fractol(char *title)
 	fr->step = 0.05;
 	fr->hstep = HEIGHT / THREADS;
 	fr->iter = ITERATIONS;
+	fr->julia_fixed = 0;
 	return (fr);
 }
 
@@ -89,6 +90,7 @@ int		main(int ac, char **av)
 	get_threads(fractol);
 	mlx_hook(fractol->win, 2, 5, &key_handler, fractol);
 	mlx_hook(fractol->win, 4, (1L<<2), &mouse_handler, fractol);
+	mlx_hook(fractol->win, 6, (1L<<6), &mouse_handler2, fractol);
 	mlx_loop(fractol->mlx);
 	return (0);
 }

@@ -2,8 +2,7 @@
 
 void		julia(t_fractol *fr, int x, int y)
 {
-	fr->c.re = -0.123;
-	fr->c.im = 0.745;
+	fr->c = fr->julia_c;
 	mandelbrot(fr, x, y);
 }
 

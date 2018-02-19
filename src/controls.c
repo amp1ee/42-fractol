@@ -4,7 +4,6 @@ static void	zoom(t_fractol *fr, char action)
 {
 	if (action == '+')
 	{
-		
 		fr->zoom *= 1.05;
 		if (fr->iter < 9999)
 				fr->iter++;
@@ -24,6 +23,7 @@ void		reset_fractol(t_fractol *fr)
 	fr->imoff = -2;
 	fr->step = 0.05;
 	fr->iter = ITERATIONS;
+	fr->julia_fixed = 0;
 }
 
 int			key_handler(int key, void *param)
@@ -61,6 +61,20 @@ int			key_handler(int key, void *param)
 		fr->iter *= 0.95;
 	else if (key == KB_R)
 		reset_fractol(fr);
+	else if (key == KB_F)
+		fr->julia_fixed = !fr->julia_fixed;
+	get_threads(fr);
+	return (0);
+}
+
+int			mouse_handler2(int mx, int my, void *p)
+{
+	t_fractol	*fr;
+
+	fr = (t_fractol *)p;
+	if (fr->julia_fixed == 0)
+		fr->julia_c = compl(2 * ((float)mx / WIDTH - 0.5),
+			2 * ((float)(HEIGHT - my) / HEIGHT - 0.5));
 	get_threads(fr);
 	return (0);
 }

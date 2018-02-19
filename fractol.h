@@ -28,7 +28,7 @@
 #  define KP_SUBTRACT			78
 #  define KB_I					34
 #  define KB_U					32
-#  define KB_R					15 // Check this
+#  define KB_R					15
 #  define KP_4					86
 #  define KP_6					88
 #  define KP_8					91
@@ -36,6 +36,7 @@
 #  define KB_W					13
 #  define KB_S					1
 #  define KB_H					4
+#  define KB_F					3
 # endif
 
 /*	------------------------  DELETE!  -----------------------------------	*/
@@ -90,6 +91,8 @@ typedef struct	s_fractol
 	double		centerx;
 	double		centery;
 	char		julia;
+	t_complex	julia_c;
+	char		julia_fixed;
 }				t_fractol;
 
 void			*drawthr(void *frac_p);
@@ -97,6 +100,7 @@ void			get_threads(t_fractol *fr);
 void			*exiterror(char *reason, t_fractol *fr);
 int				key_handler(int keycode, void *fractol);
 int				mouse_handler(int key, int mx, int my, void *fractol);
+int			mouse_handler2(int mx, int my, void *p);
 
 int				interp_color(int c1, int c2, float perc);
 void			mandelbrot(t_fractol *fr, int x, int y);
