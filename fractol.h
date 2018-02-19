@@ -57,11 +57,12 @@
 # define MLX_ERR "ERROR: mlx init failed"
 # define PCREA_ERR "ERROR: pthread_create() returned "
 # define PJOIN_ERR "ERROR: pthread_join() returned "
+# define USAGE_ERR "Usage: ./fractol newton\n\tjulia\n\tmandelbrot"
 
 #define WIDTH					720
 #define HEIGHT					480
 #define	ITERATIONS				50
-#define THREADS					12
+#define THREADS					16
 #define TOLER					1e-6
 
 typedef struct	s_complex
@@ -80,7 +81,7 @@ typedef struct	s_fractol
 	int			s_line;
 	int			ed;
 	double		zoom;
-	float		step;
+	double		step;
 	double		reoff;
 	double		imoff;
 	void		(*fun)();
@@ -98,9 +99,9 @@ typedef struct	s_fractol
 void			*drawthr(void *frac_p);
 void			get_threads(t_fractol *fr);
 void			*exiterror(char *reason, t_fractol *fr);
-int				key_handler(int keycode, void *fractol);
-int				mouse_handler(int key, int mx, int my, void *fractol);
-int			mouse_handler2(int mx, int my, void *p);
+int				key_handler(int keycode, t_fractol *fr);
+int				mouse_handler(int key, int mx, int my, t_fractol *fr);
+int			mouse_handler2(int mx, int my, t_fractol *fr);
 
 int				interp_color(int c1, int c2, float perc);
 void			mandelbrot(t_fractol *fr, int x, int y);

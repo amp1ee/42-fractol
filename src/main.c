@@ -14,12 +14,32 @@ void	*exiterror(char *reason, t_fractol *fr)
 	return (NULL);
 }
 
-t_fractol	*init_fractol(char *title)
+int		check_args(char **av, t_fractol *f)
+{
+	f->julia = 0;
+	if (!(ft_strcmp(av[1], "newton")))
+		f->fun = newton;
+	else if (!(ft_strcmp(av[1], "julia")))
+	{
+		f->julia = 1;
+		f->fun = mandelbrot;
+	}
+	else if (!(ft_strcmp(av[1], "mandelbrot")))
+		f->fun = mandelbrot;
+	else
+		return (0);
+	return (1);
+}
+
+t_fractol	*init_fractol(char *title, char **av)
 {
 	t_fractol		*fr;
 
-	if ((fr = (t_fractol *)malloc(sizeof(*fr))) == NULL ||
-	(fr->mlx = mlx_init()) == NULL ||
+	if ((fr = (t_fractol *)malloc(sizeof(*fr))) == NULL)
+		return (exiterror(MLX_ERR, NULL));
+	if ((check_args(av, fr)) == 0)
+		return (exiterror(USAGE_ERR, NULL));
+	if ((fr->mlx = mlx_init()) == NULL ||
 	(fr->win = mlx_new_window(fr->mlx, WIDTH, HEIGHT, title)) == NULL ||
 	(fr->img = mlx_new_image(fr->mlx, WIDTH, HEIGHT)) == NULL ||
 	(fr->pxl = mlx_get_data_addr(fr->img, &(fr->bpp),
@@ -28,7 +48,7 @@ t_fractol	*init_fractol(char *title)
 	fr->zoom = (double) HEIGHT / 2;
 	fr->reoff = -3;
 	fr->imoff = -2;
-	fr->step = 0.05;
+	fr->step = 0.1;
 	fr->hstep = HEIGHT / THREADS;
 	fr->iter = ITERATIONS;
 	fr->julia_fixed = 0;
@@ -61,36 +81,19 @@ int		interp_color(int c1, int c2, float perc)
 	return ((r << 16) | (g << 8) | b);
 }
 
-void	check_args(int ac, char **av, t_fractol *f)
-{
-	f->julia = 0;
-	if (ac > 1)
-	{
-		if (!(ft_strcmp(av[1], "newton")))
-			f->fun = newton;
-		else if (!(ft_strcmp(av[1], "julia")))
-		{
-			f->fun = julia;
-			f->julia = 1;
-		}
-		else
-			f->fun = mandelbrot;
-	}
-	else
-		f->fun = mandelbrot;
-}
 
 int		main(int ac, char **av)
 {
 	t_fractol		*fractol;
 
- 	if ((fractol = init_fractol("Fract'ol")) == NULL)
+	if (ac == 1)
+		exiterror(USAGE_ERR, NULL);
+	if ((fractol = init_fractol("Fract'ol", av)) == NULL)
 		return (-1);
-	check_args(ac, av, fractol);
 	get_threads(fractol);
-	mlx_hook(fractol->win, 2, 5, &key_handler, fractol);
-	mlx_hook(fractol->win, 4, (1L<<2), &mouse_handler, fractol);
-	mlx_hook(fractol->win, 6, (1L<<6), &mouse_handler2, fractol);
+	mlx_hook(fractol->win, 2, 5, key_handler, fractol);
+	mlx_hook(fractol->win, 4, (1L<<2), mouse_handler, fractol);
+	mlx_hook(fractol->win, 6, (1L<<6), mouse_handler2, fractol);
 	mlx_loop(fractol->mlx);
 	return (0);
 }

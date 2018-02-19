@@ -5,6 +5,7 @@ static void	zoom(t_fractol *fr, char action)
 	if (action == '+')
 	{
 		fr->zoom *= 1.05;
+		fr->step *= 0.96;
 		if (fr->iter < 9999)
 				fr->iter++;
 	}
@@ -14,6 +15,7 @@ static void	zoom(t_fractol *fr, char action)
 		if (fr->iter > 50)
 				fr->iter--;
 	}
+	printf("%f\n", fr->step);
 }
 
 void		reset_fractol(t_fractol *fr)
@@ -26,14 +28,8 @@ void		reset_fractol(t_fractol *fr)
 	fr->julia_fixed = 0;
 }
 
-int			key_handler(int key, void *param)
+int			key_handler(int key, t_fractol *fr)
 {
-	t_fractol	*fr;
-	float	step;		
-
-//	printf("%d\n", key);
-	fr = (t_fractol *)param;
-	step = fr->step;
 	if (key == KB_ESC)
 	{
 		exiterror("Exit by user", fr);
@@ -48,13 +44,13 @@ int			key_handler(int key, void *param)
 	else if (key == KB_Z)
 		zoom(fr, '-');
 	else if (key == KB_RIGHT)
-		(fr->reoff) -= step;
+		(fr->reoff) -= fr->step;
 	else if (key == KB_LEFT)
-		(fr->reoff) += step;
+		(fr->reoff) += fr->step;
 	else if (key == KB_UP)
-		(fr->imoff) -= step;
+		(fr->imoff) -= fr->step;
 	else if (key == KB_DOWN)
-		(fr->imoff) += step;
+		(fr->imoff) += fr->step;
 	else if (key == KB_I && (1.05 * fr->iter) < 9999)
 		fr->iter *= 1.05;
 	else if (key == KB_U && (0.95 * fr->iter) > 50)
@@ -67,25 +63,22 @@ int			key_handler(int key, void *param)
 	return (0);
 }
 
-int			mouse_handler2(int mx, int my, void *p)
+int			mouse_handler2(int mx, int my, t_fractol *fr)
 {
-	t_fractol	*fr;
-
-	fr = (t_fractol *)p;
 	if (fr->julia_fixed == 0)
-		fr->julia_c = compl(2 * ((float)mx / WIDTH - 0.5),
+	{
+		fr->c = compl(2 * ((float)mx / WIDTH - 0.5),
 			2 * ((float)(HEIGHT - my) / HEIGHT - 0.5));
-	get_threads(fr);
+		get_threads(fr);
+	}
 	return (0);
 }
 
-int			mouse_handler(int key, int mx, int my, void *p)
+int			mouse_handler(int key, int mx, int my, t_fractol *fr)
 {
-	t_fractol	*fr;
 	t_complex	corr;
 	double		d;
 
-	fr = (t_fractol *)p;
 	d =  2 * HEIGHT / fr->zoom;
 	if (key == 4 || key == 5)
 	{

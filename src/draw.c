@@ -37,8 +37,9 @@ void		put_pxl(t_fractol *fr, int x, int y, unsigned int c)
 void		*drawthr(void *fract)
 {
 	int			x, y;	
+	t_fractol	*fr;
 
-	t_fractol	*fr = (t_fractol *)fract;
+	fr = (t_fractol *)fract;
 	x = 0;
 	while (x < WIDTH)
 	{
