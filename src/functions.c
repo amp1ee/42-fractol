@@ -19,9 +19,11 @@ void		mandelbrot(t_fractol *fr, int x, int y)
 	if (i == -1)
 		put_pxl(fr, x, y, BLACK);
 	else
-		put_pxl(fr, x, y, interp_color(0x45145A, 0xFF5300,
-			((float)(fr->iter - i) / fr->iter)));
+//		put_pxl(fr, x, y, interp_color(0x45145A, 0xFF5300,
+//			((float)(fr->iter - i) / fr->iter)));
 //		put_pxl(fr, x, y, interp_color(0x45145A, 0xFF5300, ((a.re * a.re + a.im * a.im) / 13)));
+		put_pxl(fr, x, y, interp_color(0x45145A, 0xFF5300, ((fr->iter - i) + 1 -
+			(log(2) / (log(2)*sqrt(a.re*a.re + a.im*a.im)))) / fr->iter));
 }
 
 void		burning(t_fractol *fr, int x, int y)

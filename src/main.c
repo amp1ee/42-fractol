@@ -67,10 +67,10 @@ int		interp_i(int start, int end, double perc)
 		return (end);
 	else if (perc == 0.0)
 		return (start);
-	perc = sin(perc * PI);
 	res = (1 - perc) * start + perc * end;
 	return (res);
 }
+
 
 int		interp_color(int c1, int c2, float perc)
 {
@@ -78,12 +78,28 @@ int		interp_color(int c1, int c2, float perc)
 	int		g;
 	int		b;
 
+	perc = sin(perc * PI);
 	r = interp_i(c1 >> 16, c2 >> 16, perc);
 	g = interp_i((c1 >> 8) & 0xFF, (c2 >> 8) & 0xFF, perc);
 	b = interp_i(c1 & 0xFF, c2 & 0xFF, perc);
 	return ((r << 16) | (g << 8) | b);
 }
 
+int		interp_color2(int c1, int c2, float perc)
+{
+	int		r;
+	int		g;
+	int		b;
+
+	int a, d, c;
+	a = interp_i(c1 >> 16, c2 >> 16, perc);
+	d = interp_i((c1 >> 8) & 0xFF, (c2 >> 8) & 0xFF, perc);
+	c = interp_i(c1 & 0xFF, c2 & 0xFF, perc);
+	r = sin(a * perc + 4) * 127.5 + 127.5;
+	g = sin(d * perc + 2) * 127.5 + 127.5;
+	b = sin(c * perc + 1) * 127.5 + 127.5;
+	return ((r << 16) | (g << 8) | b);
+}
 
 int		main(int ac, char **av)
 {
