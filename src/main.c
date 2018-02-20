@@ -54,6 +54,7 @@ t_fractol	*init_fractol(char *title, char **av)
 	fr->hstep = HEIGHT / THREADS;
 	fr->iter = ITERATIONS;
 	fr->julia_fixed = 0;
+	fr->color = interp_color;
 	return (fr);
 }
 
@@ -70,7 +71,6 @@ int		interp_i(int start, int end, double perc)
 	res = (1 - perc) * start + perc * end;
 	return (res);
 }
-
 
 int		interp_color(int c1, int c2, float perc)
 {

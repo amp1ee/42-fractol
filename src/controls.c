@@ -59,6 +59,10 @@ int			key_handler(int key, t_fractol *fr)
 		reset_fractol(fr);
 	else if (key == KB_F)
 		fr->julia_fixed = !fr->julia_fixed;
+	else if (key == KP_4)
+		fr->color = interp_color;
+	else if (key == KP_6)
+		fr->color = interp_color2;
 	get_threads(fr);
 	return (0);
 }

@@ -14,8 +14,8 @@
 #  define KB_I					0x0069
 #  define KB_U					0x0075
 #  define KB_R					114
-#  define KP_4					83
-#  define KP_6					85
+#  define KP_4					65430
+#  define KP_6					65432
 #  define KB_F					102
 # elif __APPLE__
 #  define KB_ESC				53
@@ -86,6 +86,7 @@ typedef struct	s_fractol
 	double		reoff;
 	double		imoff;
 	void		(*fun)();
+	int			(*color)(int, int, float);
 	int			iter;
 	int			parth;
 	t_complex	c;
@@ -105,6 +106,7 @@ int				mouse_handler(int key, int mx, int my, t_fractol *fr);
 int			mouse_handler2(int mx, int my, t_fractol *fr);
 
 int				interp_color(int c1, int c2, float perc);
+int				interp_color2(int c1, int c2, float perc);
 void			mandelbrot(t_fractol *fr, int x, int y);
 void		julia(t_fractol *fr, int x, int y);
 void		newton(t_fractol *fr, int x, int y);
