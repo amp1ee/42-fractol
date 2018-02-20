@@ -39,16 +39,11 @@ t_complex	cx_div(t_complex c0, t_complex c1)
 
 t_complex	cx_pow(t_complex c, int pow)
 {
-	int			i;
 	t_complex	res;
 
-	i = 1;
 	res = c;
-	while (i < pow)
-	{
+	while (--pow)
 		res = cx_mul_cx(res, c);
-		i++;
-	}
 	return (res);
 }
 

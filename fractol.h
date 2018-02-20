@@ -16,6 +16,7 @@
 #  define KB_R					114
 #  define KP_4					83
 #  define KP_6					85
+#  define KB_F					102
 # elif __APPLE__
 #  define KB_ESC				53
 #  define KB_X					7
@@ -105,18 +106,19 @@ int			mouse_handler2(int mx, int my, t_fractol *fr);
 
 int				interp_color(int c1, int c2, float perc);
 void			mandelbrot(t_fractol *fr, int x, int y);
-void	julia(t_fractol *fr, int x, int y);
-void	newton(t_fractol *fr, int x, int y);
+void		julia(t_fractol *fr, int x, int y);
+void		newton(t_fractol *fr, int x, int y);
+void		burning(t_fractol *fr, int x, int y);
 
 void			put_pxl(t_fractol *fr, int x, int y, unsigned int c);
 
-t_complex	compl(double re, double im);
-t_complex	cx_add(t_complex c0, t_complex c1);
-t_complex	cx_sub(t_complex c0, t_complex c1);
-t_complex	cx_mul_cx(t_complex c0, t_complex c1);
-t_complex	cx_mul_sc(t_complex c, double scalar);
-t_complex	cx_div(t_complex c0, t_complex c1);
-t_complex	cx_conj(t_complex c);
-t_complex	cx_pow(t_complex c, int pow);
+t_complex		compl(double re, double im);
+t_complex		cx_add(t_complex c0, t_complex c1);
+t_complex		cx_sub(t_complex c0, t_complex c1);
+t_complex		cx_mul_cx(t_complex c0, t_complex c1);
+t_complex		cx_mul_sc(t_complex c, double scalar);
+t_complex		cx_div(t_complex c0, t_complex c1);
+t_complex		cx_conj(t_complex c);
+t_complex		cx_pow(t_complex c, int pow);
 
 #endif

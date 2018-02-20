@@ -24,6 +24,8 @@ int		check_args(char **av, t_fractol *f)
 		f->julia = 1;
 		f->fun = mandelbrot;
 	}
+	else if (!(ft_strcmp(av[1], "bship")))
+		f->fun = burning;
 	else if (!(ft_strcmp(av[1], "mandelbrot")))
 		f->fun = mandelbrot;
 	else
@@ -65,6 +67,7 @@ int		interp_i(int start, int end, double perc)
 		return (end);
 	else if (perc == 0.0)
 		return (start);
+	perc = sin(perc * PI);
 	res = (1 - perc) * start + perc * end;
 	return (res);
 }
@@ -93,7 +96,8 @@ int		main(int ac, char **av)
 	get_threads(fractol);
 	mlx_hook(fractol->win, 2, 5, key_handler, fractol);
 	mlx_hook(fractol->win, 4, (1L<<2), mouse_handler, fractol);
-	mlx_hook(fractol->win, 6, (1L<<6), mouse_handler2, fractol);
+	if (fractol->julia == 1)
+		mlx_hook(fractol->win, 6, (1L<<6), mouse_handler2, fractol);
 	mlx_loop(fractol->mlx);
 	return (0);
 }

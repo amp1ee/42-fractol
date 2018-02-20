@@ -12,10 +12,10 @@ static void	zoom(t_fractol *fr, char action)
 	else if (action == '-')
 	{	
 		fr->zoom *= 0.95;
+		fr->step *= 1.04;
 		if (fr->iter > 50)
 				fr->iter--;
 	}
-	printf("%f\n", fr->step);
 }
 
 void		reset_fractol(t_fractol *fr)
@@ -67,8 +67,8 @@ int			mouse_handler2(int mx, int my, t_fractol *fr)
 {
 	if (fr->julia_fixed == 0)
 	{
-		fr->c = compl(2 * ((float)mx / WIDTH - 0.5),
-			2 * ((float)(HEIGHT - my) / HEIGHT - 0.5));
+		fr->c = compl(4 * ((float)mx / WIDTH - 0.5),
+			4 * ((float)(HEIGHT - my) / HEIGHT - 0.5));
 		get_threads(fr);
 	}
 	return (0);
