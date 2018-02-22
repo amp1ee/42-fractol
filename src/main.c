@@ -97,16 +97,15 @@ int		interp_color(int colormode, float perc)
 
 int		interp_color2(int colormode, float perc)
 {
-	const int	c1 = colormode ? COLOR3 : COLOR1;
-	const int	c2 = colormode ? COLOR4 : COLOR2;
 	int			r;
 	int			g;
 	int			b;
+	int			a, d, c;
 
-	int a, d, c;
-	a = interp_i(c1 >> 16, c2 >> 16, perc);
-	d = interp_i((c1 >> 8) & 0xFF, (c2 >> 8) & 0xFF, perc);
-	c = interp_i(c1 & 0xFF, c2 & 0xFF, perc);
+	(void)colormode;
+	a = interp_i(COLOR1 >> 16, COLOR2 >> 16, perc);
+	d = interp_i((COLOR1 >> 8) & 0xFF, (COLOR2 >> 8) & 0xFF, perc);
+	c = interp_i(COLOR1 & 0xFF, COLOR2 & 0xFF, perc);
 	r = sin(a * perc + 4) * 127.5 + 127.5;
 	g = sin(d * perc + 2) * 127.5 + 127.5;
 	b = sin(c * perc + 1) * 127.5 + 127.5;

@@ -53,7 +53,6 @@ void		something(t_fractol *fr, int x, int y)
 
 	a.re = fr->reoff + x * fr->centerx;
 	a.im = fr->imoff + (HEIGHT - y) * fr->centery;
-	fr->c = compl(a.re, a.im);
 	i = fr->iter;
 	while ((i--) > 0 && (a.re * a.re + a.im * a.im) < 4)
 	{
@@ -75,7 +74,8 @@ void		mandelbar(t_fractol *fr, int x, int y)
 
 	a.re = fr->reoff + x * fr->centerx;
 	a.im = fr->imoff + (HEIGHT - y) * fr->centery;
-	fr->c = compl(a.re, a.im);
+	if (fr->julia == 0)
+		fr->c = compl(a.re, a.im);
 	i = fr->iter;
 	while ((i--) > 0 && (a.re * a.re + a.im * a.im) < 4)
 	{
