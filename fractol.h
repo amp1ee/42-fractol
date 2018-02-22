@@ -91,10 +91,10 @@ typedef struct	s_fractol
 	int			parth;
 	t_complex	c;
 	int			hstep;
+	t_complex	mpos;
 	double		centerx;
 	double		centery;
 	char		julia;
-	t_complex	julia_c;
 	char		julia_fixed;
 }				t_fractol;
 

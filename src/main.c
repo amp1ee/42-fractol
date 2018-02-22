@@ -112,8 +112,7 @@ int		main(int ac, char **av)
 	get_threads(fractol);
 	mlx_hook(fractol->win, 2, 5, key_handler, fractol);
 	mlx_hook(fractol->win, 4, (1L<<2), mouse_handler, fractol);
-	if (fractol->julia == 1)
-		mlx_hook(fractol->win, 6, (1L<<6), mouse_handler2, fractol);
+	mlx_hook(fractol->win, 6, (1L<<6), mouse_handler2, fractol);
 	mlx_loop(fractol->mlx);
 	return (0);
 }
