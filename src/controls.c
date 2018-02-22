@@ -74,6 +74,8 @@ int			key_handler(int key, t_fractol *fr)
 		fr->color = interp_color;
 	else if (key == KP_6)
 		fr->color = interp_color2;
+	else if (key == KP_2)
+		fr->colormode = !fr->colormode;
 	get_threads(fr);
 	return (0);
 }

@@ -47,6 +47,16 @@ t_complex	cx_pow(t_complex c, int pow)
 	return (res);
 }
 
+t_complex	cx_sin(t_complex c)
+{
+	return (compl(sin(c.re) * cosh(c.im), cos(c.re) * sinh(c.im)));
+}
+
+t_complex	cx_cos(t_complex c)
+{
+	return (compl(cos(c.re) * cosh(c.im), -sin(c.re) * sinh(c.im)));
+}
+
 t_complex	cx_conj(t_complex c)
 {
 	return (compl(c.re, c.im * -1));

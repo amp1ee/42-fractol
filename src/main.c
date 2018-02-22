@@ -17,17 +17,24 @@ void	*exiterror(char *reason, t_fractol *fr)
 int		check_args(char **av, t_fractol *f)
 {
 	f->julia = 0;
-	if (!(ft_strcmp(av[1], "newton")))
-		f->fun = newton;
-	else if (!(ft_strcmp(av[1], "julia")))
+	if (!(ft_strcmp(av[1], "mandelbrot")))
+		f->fun = mandelbrot;
+	else if (!(ft_strcmp(av[1], "mandelbar")))
+		f->fun = mandelbar;
+	else if (!(ft_strcmp(av[1], "julia")) || !(ft_strcmp(av[1], "juliabar")))
 	{
 		f->julia = 1;
-		f->fun = mandelbrot;
+		if (!(ft_strcmp(av[1], "julia")))
+			f->fun = mandelbrot;
+		else
+			f->fun = mandelbar;
 	}
 	else if (!(ft_strcmp(av[1], "bship")))
 		f->fun = burning;
-	else if (!(ft_strcmp(av[1], "mandelbrot")))
-		f->fun = mandelbrot;
+	else if (!(ft_strcmp(av[1], "newton")))
+		f->fun = newton; 
+	else if (!(ft_strcmp(av[1], "smth")))
+		f->fun = something;
 	else
 		return (0);
 	return (1);
@@ -52,6 +59,7 @@ t_fractol	*init_fractol(char *title, char **av)
 	fr->imoff = -2;
 	fr->step = 0.1;
 	fr->hstep = HEIGHT / THREADS;
+	fr->colormode = 0;
 	fr->iter = ITERATIONS;
 	fr->julia_fixed = 0;
 	fr->color = interp_color;
@@ -72,11 +80,13 @@ int		interp_i(int start, int end, double perc)
 	return (res);
 }
 
-int		interp_color(int c1, int c2, float perc)
+int		interp_color(int colormode, float perc)
 {
-	int		r;
-	int		g;
-	int		b;
+	const int	c1 = colormode ? COLOR3 : COLOR1;
+	const int	c2 = colormode ? COLOR4 : COLOR2;
+	int			r;
+	int			g;
+	int			b;
 
 	perc = sin(perc * PI);
 	r = interp_i(c1 >> 16, c2 >> 16, perc);
@@ -85,11 +95,13 @@ int		interp_color(int c1, int c2, float perc)
 	return ((r << 16) | (g << 8) | b);
 }
 
-int		interp_color2(int c1, int c2, float perc)
+int		interp_color2(int colormode, float perc)
 {
-	int		r;
-	int		g;
-	int		b;
+	const int	c1 = colormode ? COLOR3 : COLOR1;
+	const int	c2 = colormode ? COLOR4 : COLOR2;
+	int			r;
+	int			g;
+	int			b;
 
 	int a, d, c;
 	a = interp_i(c1 >> 16, c2 >> 16, perc);

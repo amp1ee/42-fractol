@@ -54,17 +54,21 @@
 # define PI 3.141592654
 # define WHITE 0xffffff
 # define BLACK 0x000000
+# define COLOR1					BLACK
+# define COLOR2					0x12D8FA
+# define COLOR3					0x45145A
+# define COLOR4					0xFF5300
 
 # define MLX_ERR "ERROR: mlx init failed"
 # define PCREA_ERR "ERROR: pthread_create() returned "
 # define PJOIN_ERR "ERROR: pthread_join() returned "
-# define USAGE_ERR "Usage: ./fractol newton\n\tjulia\n\tmandelbrot"
+# define USAGE_ERR "Usage: ./fractol mandelbrot\n\tmandelbar\n\tjulia\n\tjuliabar\n\tnewton"
 
-#define WIDTH					720
-#define HEIGHT					480
-#define	ITERATIONS				50
-#define THREADS					16
-#define TOLER					1e-6
+# define WIDTH					720
+# define HEIGHT					480
+# define ITERATIONS				50
+# define THREADS				16
+# define TOLER					1e-6
 
 typedef struct	s_complex
 {
@@ -86,7 +90,8 @@ typedef struct	s_fractol
 	double		reoff;
 	double		imoff;
 	void		(*fun)();
-	int			(*color)(int, int, float);
+	int			(*color)(int, float);
+	int			colormode;
 	int			iter;
 	int			parth;
 	t_complex	c;
@@ -105,12 +110,13 @@ int				key_handler(int keycode, t_fractol *fr);
 int				mouse_handler(int key, int mx, int my, t_fractol *fr);
 int			mouse_handler2(int mx, int my, t_fractol *fr);
 
-int				interp_color(int c1, int c2, float perc);
-int				interp_color2(int c1, int c2, float perc);
+int				interp_color(int colormode, float perc);
+int				interp_color2(int colormode, float perc);
 void			mandelbrot(t_fractol *fr, int x, int y);
-void		julia(t_fractol *fr, int x, int y);
 void		newton(t_fractol *fr, int x, int y);
 void		burning(t_fractol *fr, int x, int y);
+void		mandelbar(t_fractol *fr, int x, int y);
+void		something(t_fractol *fr, int x, int y);
 
 void			put_pxl(t_fractol *fr, int x, int y, unsigned int c);
 
@@ -121,6 +127,8 @@ t_complex		cx_mul_cx(t_complex c0, t_complex c1);
 t_complex		cx_mul_sc(t_complex c, double scalar);
 t_complex		cx_div(t_complex c0, t_complex c1);
 t_complex		cx_conj(t_complex c);
+t_complex		cx_sin(t_complex c);
+t_complex		cx_cos(t_complex c);
 t_complex		cx_pow(t_complex c, int pow);
 
 #endif

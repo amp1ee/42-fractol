@@ -9,7 +9,7 @@ SRC			= $(addprefix $(SRCDIR), \
 					complex.c)
 OBJDIR		= ./obj/
 OBJ			= $(SRC:$(SRCDIR)%.c=$(OBJDIR)%.o)
-FLAGS		= -Wall -Wextra -Werror -O3
+FLAGS		= -Wall -Wextra -Werror -Ofast
 MLXDIR		= ./minilibx
 MLXLIB		= libmlx.a
 MLX			= -lmlx
