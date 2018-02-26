@@ -15,6 +15,7 @@
 #  define KB_U					0x0075
 #  define KB_R					114
 #  define KP_4					65430
+#  define KP_2					65433
 #  define KP_6					65432
 #  define KB_F					102
 # elif __APPLE__
@@ -40,6 +41,8 @@
 #  define KB_F					3
 # endif
 
+# define MWU 4
+# define MWD 5
 /*	------------------------  DELETE!  -----------------------------------	*/
 # include <stdio.h>
 /*	------------------------  DELETE!  -----------------------------------	*/
@@ -54,29 +57,34 @@
 # define PI 3.141592654
 # define WHITE 0xffffff
 # define BLACK 0x000000
-# define COLOR1					BLACK
-# define COLOR2					0x12D8FA
-# define COLOR3					0x45145A
-# define COLOR4					0xFF5300
+# define COLOR1					0xAD0B0B//C21500
+# define COLOR2					0xFFD200
+# define COLOR3					0x0B0633 //E4572E//3E2F5B
+# define COLOR4					0xFFF36C//DB504A//F18F01//136F63
+
+# define COLOR5					0xC21500
+# define COLOR6					0xFFD200
+# define COLOR7					0x3E2F5B
+# define COLOR8					0x136F63
 
 # define MLX_ERR "ERROR: mlx init failed"
 # define PCREA_ERR "ERROR: pthread_create() returned "
 # define PJOIN_ERR "ERROR: pthread_join() returned "
-# define USAGE_ERR "Usage: ./fractol mandelbrot\n\tmandelbar\n\tjulia\n\tjuliabar\n\tnewton"
-
-# define WIDTH					720
-# define HEIGHT					480
+# define USAGE_ERR "Usage: ./fractol\n\tmandelbrot\n\tmandelbar\n\tjulia\
+								\n\tjuliabar\n\tbship\n\tnewton\n\tstrnewton"
+# define WIDTH					1280
+# define HEIGHT					720
 # define ITERATIONS				50
-# define THREADS				16
+# define THREADS				12
 # define TOLER					1e-6
 
-typedef struct	s_complex
+typedef struct
 {
 	double		re;
 	double		im;
 }				t_complex;
 
-typedef struct	s_fractol
+typedef struct
 {
 	void		*mlx;
 	void		*win;
@@ -114,6 +122,7 @@ int				interp_color(int colormode, float perc);
 int				interp_color2(int colormode, float perc);
 void			mandelbrot(t_fractol *fr, int x, int y);
 void		newton(t_fractol *fr, int x, int y);
+void		newtonstriped(t_fractol *fr, int x, int y);
 void		burning(t_fractol *fr, int x, int y);
 void		mandelbar(t_fractol *fr, int x, int y);
 void		something(t_fractol *fr, int x, int y);

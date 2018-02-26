@@ -17,23 +17,25 @@ void	*exiterror(char *reason, t_fractol *fr)
 int		check_args(char **av, t_fractol *f)
 {
 	f->julia = 0;
-	if (!(ft_strcmp(av[1], "mandelbrot")))
+	if (ft_strequ(av[1], "mandelbrot"))
 		f->fun = mandelbrot;
-	else if (!(ft_strcmp(av[1], "mandelbar")))
+	else if (ft_strequ(av[1], "mandelbar"))
 		f->fun = mandelbar;
-	else if (!(ft_strcmp(av[1], "julia")) || !(ft_strcmp(av[1], "juliabar")))
+	else if (ft_strequ(av[1], "julia") || (ft_strequ(av[1], "juliabar")))
 	{
 		f->julia = 1;
-		if (!(ft_strcmp(av[1], "julia")))
+		if (ft_strequ(av[1], "julia"))
 			f->fun = mandelbrot;
 		else
 			f->fun = mandelbar;
 	}
-	else if (!(ft_strcmp(av[1], "bship")))
+	else if (ft_strequ(av[1], "bship"))
 		f->fun = burning;
-	else if (!(ft_strcmp(av[1], "newton")))
-		f->fun = newton; 
-	else if (!(ft_strcmp(av[1], "smth")))
+	else if (ft_strequ(av[1], "newton"))
+		f->fun = newton;
+	else if (ft_strequ(av[1], "strnewton"))
+		f->fun = newtonstriped;
+	else if (ft_strequ(av[1], "smth"))
 		f->fun = something;
 	else
 		return (0);
@@ -88,7 +90,7 @@ int		interp_color(int colormode, float perc)
 	int			g;
 	int			b;
 
-	perc = sin(perc * PI);
+//	perc = sin(perc * PI);
 	r = interp_i(c1 >> 16, c2 >> 16, perc);
 	g = interp_i((c1 >> 8) & 0xFF, (c2 >> 8) & 0xFF, perc);
 	b = interp_i(c1 & 0xFF, c2 & 0xFF, perc);
@@ -97,18 +99,18 @@ int		interp_color(int colormode, float perc)
 
 int		interp_color2(int colormode, float perc)
 {
+	const int	c1 = colormode ? COLOR7 : COLOR5;
+	const int	c2 = colormode ? COLOR8 : COLOR6;
 	int			r;
 	int			g;
 	int			b;
-	int			a, d, c;
 
-	(void)colormode;
-	a = interp_i(COLOR1 >> 16, COLOR2 >> 16, perc);
-	d = interp_i((COLOR1 >> 8) & 0xFF, (COLOR2 >> 8) & 0xFF, perc);
-	c = interp_i(COLOR1 & 0xFF, COLOR2 & 0xFF, perc);
-	r = sin(a * perc + 4) * 127.5 + 127.5;
-	g = sin(d * perc + 2) * 127.5 + 127.5;
-	b = sin(c * perc + 1) * 127.5 + 127.5;
+	r = cos(interp_i(c1 >> 16, c2 >> 16, perc)
+		* perc) * 50;  
+	g = -sin(interp_i((c1 >> 8) & 0xFF, (c2 >> 8) & 0xFF, perc)
+		* perc) * 120  + 135;
+	b = sin(interp_i(c1 & 0xFF, c2 & 0xFF, perc)
+		* perc) * 120  + 135;
 	return ((r << 16) | (g << 8) | b);
 }
 

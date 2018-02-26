@@ -1,20 +1,20 @@
 #include "../fractol.h"
 
-static void	zoom(t_fractol *fr, char action)
+static void	zoom(t_fractol *fr, int key)
 {
-	if (action == '+')
+	if (key == KB_X || key == MWU)
 	{
 		fr->zoom *= 1.05;
 		fr->step *= 0.95;
 		if (fr->iter < 9999)
-				fr->iter += 4;
+				fr->iter += 1;
 	}
-	else if (action == '-')
+	else
 	{	
 		fr->zoom *= 0.95;
 		fr->step *= 1.05;
 		if (fr->iter > 50)
-				fr->iter -= 4;
+				fr->iter -= 1;
 	}
 }
 
@@ -32,6 +32,7 @@ int			key_handler(int key, t_fractol *fr)
 {
 	t_complex	corr;
 	double		d;
+
 	if (key == KB_ESC)
 	{
 		exiterror("Exit by user", fr);
@@ -46,10 +47,7 @@ int			key_handler(int key, t_fractol *fr)
 		d = 2 * HEIGHT / fr->zoom;
 		corr.re = fr->reoff + ((float)fr->mpos.re / WIDTH) * d * 1.5;
 		corr.im = fr->imoff + ((HEIGHT - (float)fr->mpos.im) / HEIGHT) * d;
-		if (key == KB_X)
-			zoom(fr, '+');
-		else
-			zoom(fr, '-');
+		zoom(fr, key);
 		d = 2 * HEIGHT / fr->zoom;
 		fr->reoff = corr.re - ((float)fr->mpos.re / WIDTH) * d * 1.5;
 		fr->imoff = corr.im - ((HEIGHT - (float)fr->mpos.im) / HEIGHT) * d;
@@ -102,10 +100,7 @@ int			mouse_handler(int key, int mx, int my, t_fractol *fr)
 	{
 		corr.re = fr->reoff + ((float)mx / WIDTH) * d * 1.5;
 		corr.im = fr->imoff + ((HEIGHT - (float)my) / HEIGHT) * d;
-		if (key == 4)
-			zoom(fr, '+');
-		if (key == 5)
-			zoom(fr, '-');	
+		zoom(fr, key);
 		d = 2 * HEIGHT / fr->zoom;
 		fr->reoff = corr.re - ((float)mx / WIDTH) * d * 1.5;
 		fr->imoff = corr.im - ((HEIGHT - (float)my) / HEIGHT) * d;
