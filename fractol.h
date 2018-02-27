@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fractol.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oahieiev <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/02/27 19:59:34 by oahieiev          #+#    #+#             */
+/*   Updated: 2018/02/27 19:59:41 by oahieiev         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FRACTOL_H
 # define FRACTOL_H
 
@@ -16,7 +28,6 @@
 #  define KB_R					114
 #  define KP_4					65430
 #  define KP_2					65433
-#  define KP_6					65432
 #  define KB_F					102
 # elif __APPLE__
 #  define KB_ESC				53
@@ -32,35 +43,25 @@
 #  define KB_U					32
 #  define KB_R					15
 #  define KP_4					86
-#  define KP_6					88
-#  define KP_8					91
 #  define KP_2					84
-#  define KB_W					13
-#  define KB_S					1
-#  define KB_H					4
 #  define KB_F					3
 # endif
 
 # define MWU 4
 # define MWD 5
-/*	------------------------  DELETE!  -----------------------------------	*/
-# include <stdio.h>
-/*	------------------------  DELETE!  -----------------------------------	*/
 
 # include "minilibx/mlx.h"
-# include <math.h>
-# include <stdbool.h>
-# include <stdlib.h>
 # include <pthread.h>
-# include "../libft/libft.h"
+# include "./libft/libft.h"
+# include "complex.h"
 
 # define PI 3.141592654
 # define WHITE 0xffffff
 # define BLACK 0x000000
-# define COLOR1					0xAD0B0B//C21500
+# define COLOR1					0x740D00
 # define COLOR2					0xFFD200
-# define COLOR3					0x0B0633 //E4572E//3E2F5B
-# define COLOR4					0xFFF36C//DB504A//F18F01//136F63
+# define COLOR3					0x000618
+# define COLOR4					0xFFF36C
 
 # define COLOR5					0xC21500
 # define COLOR6					0xFFD200
@@ -68,23 +69,19 @@
 # define COLOR8					0x136F63
 
 # define MLX_ERR "ERROR: mlx init failed"
+# define USG_ERR1 "Usage: ./fractol [option]\n"
+# define USG_ERR2 "Available options:\n\tmandelbrot\n\tmandelbar\n\tjulia"
+# define USG_ERR3 "\n\tjuliabar\n\tbship\n\tnewton\n\tstrnewton"
+# define USG_ERR USG_ERR1 USG_ERR2 USG_ERR3
 # define PCREA_ERR "ERROR: pthread_create() returned "
 # define PJOIN_ERR "ERROR: pthread_join() returned "
-# define USAGE_ERR "Usage: ./fractol\n\tmandelbrot\n\tmandelbar\n\tjulia\
-								\n\tjuliabar\n\tbship\n\tnewton\n\tstrnewton"
 # define WIDTH					1280
 # define HEIGHT					720
 # define ITERATIONS				50
 # define THREADS				12
 # define TOLER					1e-6
 
-typedef struct
-{
-	double		re;
-	double		im;
-}				t_complex;
-
-typedef struct
+typedef struct	s_fractol
 {
 	void		*mlx;
 	void		*win;
@@ -114,30 +111,22 @@ typedef struct
 void			*drawthr(void *frac_p);
 void			get_threads(t_fractol *fr);
 void			*exiterror(char *reason, t_fractol *fr);
+void			reset_fractol(t_fractol *fr);
 int				key_handler(int keycode, t_fractol *fr);
 int				mouse_handler(int key, int mx, int my, t_fractol *fr);
-int			mouse_handler2(int mx, int my, t_fractol *fr);
+int				mouse_handler2(int mx, int my, t_fractol *fr);
 
+void			change_color(t_fractol *fr, int key);
 int				interp_color(int colormode, float perc);
-int				interp_color2(int colormode, float perc);
+int				psy_color(int colormode, float perc);
+
 void			mandelbrot(t_fractol *fr, int x, int y);
-void		newton(t_fractol *fr, int x, int y);
-void		newtonstriped(t_fractol *fr, int x, int y);
-void		burning(t_fractol *fr, int x, int y);
-void		mandelbar(t_fractol *fr, int x, int y);
-void		something(t_fractol *fr, int x, int y);
+void			newton(t_fractol *fr, int x, int y);
+void			strnewton(t_fractol *fr, int x, int y);
+void			burning(t_fractol *fr, int x, int y);
+void			mandelbar(t_fractol *fr, int x, int y);
+void			something(t_fractol *fr, int x, int y);
 
 void			put_pxl(t_fractol *fr, int x, int y, unsigned int c);
-
-t_complex		compl(double re, double im);
-t_complex		cx_add(t_complex c0, t_complex c1);
-t_complex		cx_sub(t_complex c0, t_complex c1);
-t_complex		cx_mul_cx(t_complex c0, t_complex c1);
-t_complex		cx_mul_sc(t_complex c, double scalar);
-t_complex		cx_div(t_complex c0, t_complex c1);
-t_complex		cx_conj(t_complex c);
-t_complex		cx_sin(t_complex c);
-t_complex		cx_cos(t_complex c);
-t_complex		cx_pow(t_complex c, int pow);
 
 #endif

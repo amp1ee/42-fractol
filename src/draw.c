@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   draw.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oahieiev <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/02/27 19:58:15 by oahieiev          #+#    #+#             */
+/*   Updated: 2018/02/27 19:58:17 by oahieiev         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../fractol.h"
 
 void		put_pxl(t_fractol *fr, int x, int y, unsigned int c)
@@ -14,7 +26,8 @@ void		put_pxl(t_fractol *fr, int x, int y, unsigned int c)
 
 void		*drawthr(void *fract)
 {
-	int			x, y;	
+	int			x;
+	int			y;
 	t_fractol	*fr;
 
 	fr = (t_fractol *)fract;
@@ -46,7 +59,7 @@ void		get_threads(t_fractol *fr)
 	i = 0;
 	y = 0;
 	while (i < THREADS)
-	{	
+	{
 		frx[i] = *fr;
 		frx[i].parth = y;
 		y += fr->hstep;

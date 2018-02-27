@@ -1,4 +1,16 @@
-#include "../fractol.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   complex.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oahieiev <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/02/27 19:59:01 by oahieiev          #+#    #+#             */
+/*   Updated: 2018/02/27 19:59:03 by oahieiev         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../complex.h"
 
 t_complex	compl(double re, double im)
 {
@@ -21,43 +33,11 @@ t_complex	cx_sub(t_complex c0, t_complex c1)
 
 t_complex	cx_mul_cx(t_complex c0, t_complex c1)
 {
-	return (compl(c0.re * c1.re - c0.im * c1.im, c0.re * c1.im + c0.im * c1.re));
+	return (compl(c0.re * c1.re - c0.im * c1.im,
+		c0.re * c1.im + c0.im * c1.re));
 }
 
 t_complex	cx_mul_sc(t_complex c, double scalar)
 {
 	return (compl(c.re * scalar, c.im * scalar));
-}
-
-t_complex	cx_div(t_complex c0, t_complex c1)
-{
-	t_complex c;
-
-	c = cx_mul_sc(cx_conj(c1), (1.0 / (c1.re * c1.re + c1.im * c1.im)));
-	return (cx_mul_cx(c0, c));
-}
-
-t_complex	cx_pow(t_complex c, int pow)
-{
-	t_complex	res;
-
-	res = c;
-	while (--pow)
-		res = cx_mul_cx(res, c);
-	return (res);
-}
-
-t_complex	cx_sin(t_complex c)
-{
-	return (compl(sin(c.re) * cosh(c.im), cos(c.re) * sinh(c.im)));
-}
-
-t_complex	cx_cos(t_complex c)
-{
-	return (compl(cos(c.re) * cosh(c.im), -sin(c.re) * sinh(c.im)));
-}
-
-t_complex	cx_conj(t_complex c)
-{
-	return (compl(c.re, c.im * -1));
 }

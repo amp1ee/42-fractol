@@ -6,24 +6,29 @@ SRC			= $(addprefix $(SRCDIR), \
 					controls.c \
 					draw.c \
 					functions.c \
-					complex.c)
+					functions2.c \
+					complex.c \
+					complex2.c \
+					colors.c)
 OBJDIR		= ./obj/
 OBJ			= $(SRC:$(SRCDIR)%.c=$(OBJDIR)%.o)
 FLAGS		= -Wall -Wextra -Werror -O3
-MLXDIR		= ./minilibx
-MLXLIB		= libmlx.a
-MLX			= -lmlx
 
+MLX			= -lmlx
 ifeq ($(shell uname -s), Linux)
+  MLXDIR	= ./minilibx/
   MLX		+= -lX11 -lXext -L$(MLXDIR)
+  MLXLIB	= $(addprefix $(MLXDIR), libmlx.a)
   MULTHREAD	= -pthread
 else
   MLX		+= -framework OpenGL -framework AppKit
 endif
 
-LIBFT		= -lft -L../libft
+LIBFT_DIR	= ./libft/
+LIBFT		= $(addprefix $(LIBFT_DIR), libft.a)
+LIBFT_FLAGS	= -lft -L$(LIBFT_DIR)
 MATHLIB		= -lm
-INCL		= fractol.h
+INCL		= fractol.h complex.h
 
 .PHONY: all clean fclean re
 
@@ -31,10 +36,12 @@ all: $(NAME)
 
 $(OBJDIR)%.o: $(SRCDIR)%.c $(INCL)
 	@mkdir -p $(OBJDIR)
-	gcc $(FLAGS) -c $< -o $@ -I.
+	@gcc $(FLAGS) -c $< -o $@ -I.
 
-$(NAME): $(OBJ) $(MLXDIR)/$(MLXLIB)
-	gcc $(OBJ) -o $(NAME) $(MLX) $(MATHLIB) $(MULTHREAD) $(LIBFT)
+$(NAME): $(OBJ) $(LIBFT) $(MLXLIB)
+	@gcc $(OBJ) -o $(NAME) $(MLX) $(MATHLIB) $(MULTHREAD) $(LIBFT_FLAGS)
+$(LIBFT):
+	@make -sC $(LIBFT_DIR)
 $(MLXLIB):
 	@printf "Compiling libmlx.a\n"
 	@make -sC $(MLXDIR)

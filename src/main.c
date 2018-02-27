@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oahieiev <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/02/27 19:58:06 by oahieiev          #+#    #+#             */
+/*   Updated: 2018/02/27 19:58:09 by oahieiev         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../fractol.h"
 
-void	*exiterror(char *reason, t_fractol *fr)
+void		*exiterror(char *reason, t_fractol *fr)
 {
 	ft_putendl(reason);
 	if (fr)
@@ -14,7 +26,7 @@ void	*exiterror(char *reason, t_fractol *fr)
 	return (NULL);
 }
 
-int		check_args(char **av, t_fractol *f)
+int			check_args(char **av, t_fractol *f)
 {
 	f->julia = 0;
 	if (ft_strequ(av[1], "mandelbrot"))
@@ -34,7 +46,7 @@ int		check_args(char **av, t_fractol *f)
 	else if (ft_strequ(av[1], "newton"))
 		f->fun = newton;
 	else if (ft_strequ(av[1], "strnewton"))
-		f->fun = newtonstriped;
+		f->fun = strnewton;
 	else if (ft_strequ(av[1], "smth"))
 		f->fun = something;
 	else
@@ -42,21 +54,31 @@ int		check_args(char **av, t_fractol *f)
 	return (1);
 }
 
-t_fractol	*init_fractol(char *title, char **av)
+void		reset_fractol(t_fractol *fr)
 {
-	t_fractol		*fr;
+	fr->zoom = (double)HEIGHT / 2;
+	fr->reoff = -3;
+	fr->imoff = -2;
+	fr->step = 0.1;
+	fr->iter = ITERATIONS;
+	fr->julia_fixed = 0;
+}
+
+t_fractol	*init_fractol(char *title, char **av, int ac)
+{
+	t_fractol	*fr;
 
 	if ((fr = (t_fractol *)malloc(sizeof(*fr))) == NULL)
 		return (exiterror(MLX_ERR, NULL));
-	if ((check_args(av, fr)) == 0)
-		return (exiterror(USAGE_ERR, NULL));
+	if (ac == 1 || ac > 2 || (check_args(av, fr)) == 0)
+		return (exiterror(USG_ERR, NULL));
 	if ((fr->mlx = mlx_init()) == NULL ||
 	(fr->win = mlx_new_window(fr->mlx, WIDTH, HEIGHT, title)) == NULL ||
 	(fr->img = mlx_new_image(fr->mlx, WIDTH, HEIGHT)) == NULL ||
 	(fr->pxl = mlx_get_data_addr(fr->img, &(fr->bpp),
 		&(fr->s_line), &(fr->ed))) == NULL)
 		return (exiterror(MLX_ERR, fr));
-	fr->zoom = (double) HEIGHT / 2;
+	fr->zoom = (double)HEIGHT / 2;
 	fr->reoff = -3;
 	fr->imoff = -2;
 	fr->step = 0.1;
@@ -68,64 +90,16 @@ t_fractol	*init_fractol(char *title, char **av)
 	return (fr);
 }
 
-int		interp_i(int start, int end, double perc)
-{
-	int		res;
-
-	if (start == end)
-		return (start);
-	if (perc == 1.0)
-		return (end);
-	else if (perc == 0.0)
-		return (start);
-	res = (1 - perc) * start + perc * end;
-	return (res);
-}
-
-int		interp_color(int colormode, float perc)
-{
-	const int	c1 = colormode ? COLOR3 : COLOR1;
-	const int	c2 = colormode ? COLOR4 : COLOR2;
-	int			r;
-	int			g;
-	int			b;
-
-//	perc = sin(perc * PI);
-	r = interp_i(c1 >> 16, c2 >> 16, perc);
-	g = interp_i((c1 >> 8) & 0xFF, (c2 >> 8) & 0xFF, perc);
-	b = interp_i(c1 & 0xFF, c2 & 0xFF, perc);
-	return ((r << 16) | (g << 8) | b);
-}
-
-int		interp_color2(int colormode, float perc)
-{
-	const int	c1 = colormode ? COLOR7 : COLOR5;
-	const int	c2 = colormode ? COLOR8 : COLOR6;
-	int			r;
-	int			g;
-	int			b;
-
-	r = cos(interp_i(c1 >> 16, c2 >> 16, perc)
-		* perc) * 50;  
-	g = -sin(interp_i((c1 >> 8) & 0xFF, (c2 >> 8) & 0xFF, perc)
-		* perc) * 120  + 135;
-	b = sin(interp_i(c1 & 0xFF, c2 & 0xFF, perc)
-		* perc) * 120  + 135;
-	return ((r << 16) | (g << 8) | b);
-}
-
-int		main(int ac, char **av)
+int			main(int ac, char **av)
 {
 	t_fractol		*fractol;
 
-	if (ac == 1)
-		exiterror(USAGE_ERR, NULL);
-	if ((fractol = init_fractol("Fract'ol", av)) == NULL)
+	if ((fractol = init_fractol("Fract'ol", av, ac)) == NULL)
 		return (-1);
 	get_threads(fractol);
 	mlx_hook(fractol->win, 2, 5, key_handler, fractol);
-	mlx_hook(fractol->win, 4, (1L<<2), mouse_handler, fractol);
-	mlx_hook(fractol->win, 6, (1L<<6), mouse_handler2, fractol);
+	mlx_hook(fractol->win, 4, (1L << 2), mouse_handler, fractol);
+	mlx_hook(fractol->win, 6, (1L << 6), mouse_handler2, fractol);
 	mlx_loop(fractol->mlx);
 	return (0);
 }
