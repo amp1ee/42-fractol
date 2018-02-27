@@ -35,19 +35,23 @@ INCL		= fractol.h complex.h
 all: $(NAME)
 
 $(OBJDIR)%.o: $(SRCDIR)%.c $(INCL)
+	@printf "\tCompiling $<\n"
 	@mkdir -p $(OBJDIR)
 	@gcc $(FLAGS) -c $< -o $@ -I.
 
 $(NAME): $(OBJ) $(LIBFT) $(MLXLIB)
 	@gcc $(OBJ) -o $(NAME) $(MLX) $(MATHLIB) $(MULTHREAD) $(LIBFT_FLAGS)
+	@printf "Done\n"
 $(LIBFT):
+	@printf "\tCompiling libft.a...\n"
 	@make -sC $(LIBFT_DIR)
 $(MLXLIB):
-	@printf "Compiling libmlx.a\n"
+	@printf "\tCompiling libmlx.a\n"
 	@make -sC $(MLXDIR)
 clean:
-	rm -rf $(OBJDIR)
+	@rm -rf $(OBJDIR)
+	@printf "\tObject files removed\n"
 fclean: clean
-	rm -f $(NAME)
-
+	@rm -f $(NAME)
+	@printf "\tExecutable '$(NAME)' removed\n"
 re: fclean all

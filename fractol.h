@@ -50,7 +50,7 @@
 # define MWU 4
 # define MWD 5
 
-# include "minilibx/mlx.h"
+# include "./minilibx/mlx.h"
 # include <pthread.h>
 # include "./libft/libft.h"
 # include "complex.h"
