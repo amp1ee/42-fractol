@@ -54,17 +54,17 @@ int					interp_color(int colormode, float perc)
 
 int					psy_color(int colormode, float perc)
 {
-	const int	c1 = colormode ? COLOR7 : COLOR5;
-	const int	c2 = colormode ? COLOR8 : COLOR6;
+	const int	c1 = !colormode ? COLOR7 : COLOR4;
+	const int	c2 = !colormode ? COLOR8 : COLOR3;
 	int			r;
 	int			g;
 	int			b;
 
-	r = sin(interp_i(c1 >> 16, c2 >> 16, perc)
-		* perc) * 50;
-	g = sin(interp_i((c1 >> 8) & 0xFF, (c2 >> 8) & 0xFF, perc)
-		* perc) * 120 + 135;
-	b = sin(interp_i(c1 & 0xFF, c2 & 0xFF, perc)
+	r = 0.9 * sin(interp_i(c1 >> 16, c2 >> 16, perc / 2)
+		* perc) * 125 + 125;
+	g = 0.8 * sin(interp_i((c1 >> 8) & 0xFF, (c2 >> 8) & 0xFF, perc / 2)
+		* perc) * 125 + 125;
+	b = 0.7 * sin(interp_i(c1 & 0xFF, c2 & 0xFF, perc / 2)
 		* perc) * 120 + 135;
 	return ((r << 16) | (g << 8) | b);
 }

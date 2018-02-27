@@ -58,10 +58,10 @@
 # define PI				3.141592654
 # define WHITE			0xffffff
 # define BLACK			0x000000
-# define COLOR1			0x740D00
-# define COLOR2			0xFFD200
 # define COLOR3			0x000618
 # define COLOR4			0xFFF36C
+# define COLOR1			0x510900//740D00
+# define COLOR2			0xFFD200
 
 # define COLOR5			0xC21500
 # define COLOR6			0xFFD200
@@ -69,25 +69,27 @@
 # define COLOR8			0x136F63
 
 # define Y			"\e[32m"
+# define M			"\e[33m"
 # define BOLD		"\e[1m\e[4m"
 # define CLR		"\e[0m"
+# define T			"\t\t  "
 # define MLX_ERR	"ERROR: mlx init failed"
-# define USG_ERR1	Y"Usage:"CLR" ./fractol [option]\n\n"
-# define USG_ERR2	Y"Available options:"CLR"\n\tmandelbrot\n\tmandelbar\n"
-# define USG_ERR3	"\tjulia\n\tjuliabar\n\tbship\n\tnewton\n\tstrnewton"
+# define USG_ERR1	Y"\n\tUsage:"M" ./fractol"Y" [option]\n\n"
+# define USG_ERR2	M"\tAvailable options:\n"Y T"mandelbrot\n"T"mandelbar\n"
+# define USG_ERR3	T"julia\n"T"juliabar\n"T"bship\n"T"newton\n"T"strnewton\n"
 # define USG_ERR	USG_ERR1 USG_ERR2 USG_ERR3
 # define PTHR_ERR	"ERROR: Some problem with pthread occured"
-# define WIDTH			1280
-# define HEIGHT			720
+# define WIDTH			800
+# define HEIGHT			533
 # define ITERATIONS		50
 # define THREADS		12
 # define TOLER			1e-6
-# define CTRL0		"\n\t"Y BOLD"Controls\n"CLR
-# define CTRL1		Y"Fix Julia set"CLR"\tF\n" Y "Reset view"CLR"\tR\n"
-# define CTRL2		Y"Move"CLR"\t\tUp/Down/Left/Right\n"
-# define CTRL3		Y"Zoom"CLR"\t\tZ/X, Mousewheel\n"
-# define CTRL4		Y"Alt. colors"CLR"\tNumPad 2\n"Y"Psy mode"CLR"\tNumPad 4\n"
-# define CTRL5		Y"Modify iters"CLR"\tI/U\n"
+# define CTRL0		"\n\t\t"Y BOLD"Controls\n\n"CLR
+# define CTRL1		Y"\tFix Julia set"M"\tF\n"Y"\tReset view"M"\tR\n"
+# define CTRL2		Y"\tMove"M"\t\tUp/Down/Left/Right\n"
+# define CTRL3		Y"\tZoom"M"\t\tZ/X, Mouse wheel\n"
+# define CTRL4		Y"\tColors"M"\t\tNumPad 2\n"Y"\tPsymode"M
+# define CTRL5		"\t\tNumPad 4\n"Y"\tModify iters"M"\tI/U\n"
 # define CONTROLS	CTRL0 CTRL1 CTRL2 CTRL3 CTRL4 CTRL5
 
 typedef struct	s_fractol

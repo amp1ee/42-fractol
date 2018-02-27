@@ -26,31 +26,32 @@ void		*exiterror(char *reason, t_fractol *fr)
 	return (NULL);
 }
 
-int			check_args(char **av, t_fractol *f)
+int			check_args(char *av, t_fractol *f)
 {
 	f->julia = 0;
-	if (ft_strequ(av[1], "mandelbrot"))
+	if (ft_strequ(av, "mandelbrot"))
 		f->fun = mandelbrot;
-	else if (ft_strequ(av[1], "mandelbar"))
+	else if (ft_strequ(av, "mandelbar"))
 		f->fun = mandelbar;
-	else if (ft_strequ(av[1], "julia") || (ft_strequ(av[1], "juliabar")))
+	else if (ft_strequ(av, "julia") || (ft_strequ(av, "juliabar")))
 	{
 		f->julia = 1;
-		if (ft_strequ(av[1], "julia"))
+		if (ft_strequ(av, "julia"))
 			f->fun = mandelbrot;
 		else
 			f->fun = mandelbar;
 	}
-	else if (ft_strequ(av[1], "bship"))
+	else if (ft_strequ(av, "bship"))
 		f->fun = burning;
-	else if (ft_strequ(av[1], "newton"))
+	else if (ft_strequ(av, "newton"))
 		f->fun = newton;
-	else if (ft_strequ(av[1], "strnewton"))
+	else if (ft_strequ(av, "strnewton"))
 		f->fun = strnewton;
-	else if (ft_strequ(av[1], "smth"))
+	else if (ft_strequ(av, "smth"))
 		f->fun = something;
 	else
 		return (0);
+	av[0] = ft_toupper(av[0]);
 	return (1);
 }
 
@@ -64,20 +65,23 @@ void		reset_fractol(t_fractol *fr)
 	fr->julia_fixed = 0;
 }
 
-t_fractol	*init_fractol(char *title, char **av, int ac)
+t_fractol	*init_fractol(char *av, int ac)
 {
 	t_fractol	*fr;
+	char		*title;
 
 	if ((fr = (t_fractol *)malloc(sizeof(*fr))) == NULL)
 		return (exiterror(MLX_ERR, NULL));
-	if (ac == 1 || ac > 2 || (check_args(av, fr)) == 0)
+	if (ac == 1 || ac > 2 || !(check_args(av, fr)))
 		return (exiterror(USG_ERR, NULL));
+	title = ft_strjoin("Fract`ol - ", av);
 	if ((fr->mlx = mlx_init()) == NULL ||
 	(fr->win = mlx_new_window(fr->mlx, WIDTH, HEIGHT, title)) == NULL ||
 	(fr->img = mlx_new_image(fr->mlx, WIDTH, HEIGHT)) == NULL ||
 	(fr->pxl = mlx_get_data_addr(fr->img, &(fr->bpp),
 		&(fr->s_line), &(fr->ed))) == NULL)
 		return (exiterror(MLX_ERR, fr));
+	ft_strdel(&title);
 	fr->zoom = (double)HEIGHT / 2;
 	fr->reoff = -3;
 	fr->imoff = -2;
@@ -94,7 +98,9 @@ int			main(int ac, char **av)
 {
 	t_fractol		*fractol;
 
-	if ((fractol = init_fractol("Fract'ol", av, ac)) == NULL)
+	(void)(system("printf '\e[32m' && figlet -f lean '\tFract`ol'") + 42);
+	(void)(system("printf '\e[0m'") + 1);
+	if ((fractol = init_fractol(av[1], ac)) == NULL)
 		return (-1);
 	ft_putendl(CONTROLS);
 	get_threads(fractol);

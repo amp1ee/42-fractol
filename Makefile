@@ -54,4 +54,5 @@ clean:
 fclean: clean
 	@rm -f $(NAME)
 	@printf "\tExecutable '$(NAME)' removed\n"
+	@make -sC $(LIBFT_DIR) fclean
 re: fclean all
