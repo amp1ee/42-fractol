@@ -51,25 +51,25 @@ void		get_threads(t_fractol *fr)
 	pthread_t		thr[THREADS];
 	t_fractol		frx[THREADS];
 	int				i;
-	int				ret;
 	int				y;
+	char			*iter;
 
 	fr->centerx = (3 * HEIGHT / (fr->zoom * WIDTH));
 	fr->centery = 2 / fr->zoom;
-	i = 0;
+	i = -1;
 	y = 0;
-	while (i < THREADS)
+	while (++i < THREADS)
 	{
 		frx[i] = *fr;
 		frx[i].parth = y;
 		y += fr->hstep;
-		if ((ret = pthread_create(&thr[i], NULL, drawthr, (void *)&frx[i])))
-			exiterror(ft_strjoin(PCREA_ERR, ft_itoa(ret)), fr);
-		i++;
+		if (pthread_create(&thr[i], NULL, drawthr, (void *)&frx[i]))
+			exiterror(PTHR_ERR, fr);
 	}
 	while (i-- > 0)
-		if ((ret = pthread_join(thr[i], NULL)))
-			exiterror(ft_strjoin(PJOIN_ERR, ft_itoa(ret)), fr);
+		if (pthread_join(thr[i], NULL))
+			exiterror(PTHR_ERR, fr);
 	mlx_put_image_to_window(fr->mlx, fr->win, fr->img, 0, 0);
-	mlx_string_put(fr->mlx, fr->win, 20, 20, WHITE, ft_itoa(fr->iter));
+	mlx_string_put(fr->mlx, fr->win, 20, 20, WHITE, (iter = ft_itoa(fr->iter)));
+	ft_strdel(&iter);
 }

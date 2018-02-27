@@ -96,6 +96,7 @@ int			main(int ac, char **av)
 
 	if ((fractol = init_fractol("Fract'ol", av, ac)) == NULL)
 		return (-1);
+	ft_putendl(CONTROLS);
 	get_threads(fractol);
 	mlx_hook(fractol->win, 2, 5, key_handler, fractol);
 	mlx_hook(fractol->win, 4, (1L << 2), mouse_handler, fractol);
