@@ -47,12 +47,11 @@ int			check_args(char *av, t_fractol *f)
 		f->fun = newton;
 	else if (ft_strequ(av, "strnewton"))
 		f->fun = strnewton;
-	else if (ft_strequ(av, "smth"))
-		f->fun = something;
-	else
-		return (0);
-	av[0] = ft_toupper(av[0]);
-	return (1);
+	else if (ft_strequ(av, "galley"))
+		f->fun = galley;
+	else if (ft_strequ(av, "celtic"))
+		f->fun = celtic;
+	return (f->fun != NULL);
 }
 
 void		reset_fractol(t_fractol *fr)

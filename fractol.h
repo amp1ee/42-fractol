@@ -60,7 +60,7 @@
 # define BLACK			0x000000
 # define COLOR3			0x000618
 # define COLOR4			0xFFF36C
-# define COLOR1			0x510900//740D00
+# define COLOR1			0x680b00
 # define COLOR2			0xFFD200
 
 # define COLOR5			0xC21500
@@ -74,10 +74,11 @@
 # define CLR		"\e[0m"
 # define T			"\t\t  "
 # define MLX_ERR	"ERROR: mlx init failed"
-# define USG_ERR1	Y"\n\tUsage:"M" ./fractol"Y" [option]\n\n"
-# define USG_ERR2	M"\tAvailable options:\n"Y T"mandelbrot\n"T"mandelbar\n"
-# define USG_ERR3	T"julia\n"T"juliabar\n"T"bship\n"T"newton\n"T"strnewton\n"
-# define USG_ERR	USG_ERR1 USG_ERR2 USG_ERR3 CLR
+# define USG_1		Y"\n\tUsage:"M" ./fractol"Y" [option]\n\n"
+# define USG_2		M"\tAvailable options:\n"Y T"mandelbrot\n"T"mandelbar\n"
+# define USG_3		T"julia\n"T"juliabar\n"T"bship\n"T"newton\n"T"strnewton\n"
+# define USG_4		T"galley\n"T"celtic\n"
+# define USG_ERR	USG_1 USG_2 USG_3 USG_4 CLR
 # define PTHR_ERR	"ERROR: Some problem with pthread occured"
 # define WIDTH			800
 # define HEIGHT			533
@@ -136,7 +137,8 @@ void			newton(t_fractol *fr, int x, int y);
 void			strnewton(t_fractol *fr, int x, int y);
 void			burning(t_fractol *fr, int x, int y);
 void			mandelbar(t_fractol *fr, int x, int y);
-void			something(t_fractol *fr, int x, int y);
+void			galley(t_fractol *fr, int x, int y);
+void			celtic(t_fractol *fr, int x, int y);
 
 void			put_pxl(t_fractol *fr, int x, int y, unsigned int c);
 
