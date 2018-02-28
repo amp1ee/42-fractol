@@ -55,18 +55,17 @@
 # include "./libft/libft.h"
 # include "complex.h"
 
-# define PI				3.141592654
-# define WHITE			0xffffff
-# define BLACK			0x000000
-# define COLOR3			0x000618
-# define COLOR4			0xFFF36C
-# define COLOR1			0x680b00
-# define COLOR2			0xFFD200
-
-# define COLOR5			0xC21500
-# define COLOR6			0xFFD200
-# define COLOR7			0x3E2F5B
-# define COLOR8			0x136F63
+# define PI			3.141592
+# define WHITE		0xFFFFFF
+# define BLACK		0x000000
+# define COLOR3		0x000618
+# define COLOR4		0xFFF36C
+# define COLOR1		0x680b00
+# define COLOR2		0xFFD200
+# define COLOR5		0xC21500
+# define COLOR6		0xFFD200
+# define COLOR7		0x3E2F5B
+# define COLOR8		0x136F63
 
 # define Y			"\e[32m"
 # define M			"\e[33m"
@@ -80,11 +79,11 @@
 # define USG_4		T"galley\n"T"celtic\n"
 # define USG_ERR	USG_1 USG_2 USG_3 USG_4 CLR
 # define PTHR_ERR	"ERROR: Some problem with pthread occured"
-# define WIDTH			800
-# define HEIGHT			533
-# define ITERATIONS		50
-# define THREADS		12
-# define TOLER			1e-6
+# define WIDTH		800
+# define HEIGHT		533
+# define ITERATIONS	50
+# define THREADS	12
+# define TOLER		1e-6
 # define CTRL0		"\n\t\t"Y BOLD"Controls\n\n"CLR
 # define CTRL1		Y"\tFix Julia set"M"\tF\n"Y"\tReset view"M"\tR\n"
 # define CTRL2		Y"\tMove"M"\t\tUp/Down/Left/Right\n"
