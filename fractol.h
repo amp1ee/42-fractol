@@ -77,7 +77,7 @@
 # define USG_ERR1	Y"\n\tUsage:"M" ./fractol"Y" [option]\n\n"
 # define USG_ERR2	M"\tAvailable options:\n"Y T"mandelbrot\n"T"mandelbar\n"
 # define USG_ERR3	T"julia\n"T"juliabar\n"T"bship\n"T"newton\n"T"strnewton\n"
-# define USG_ERR	USG_ERR1 USG_ERR2 USG_ERR3
+# define USG_ERR	USG_ERR1 USG_ERR2 USG_ERR3 CLR
 # define PTHR_ERR	"ERROR: Some problem with pthread occured"
 # define WIDTH			800
 # define HEIGHT			533
@@ -90,7 +90,7 @@
 # define CTRL3		Y"\tZoom"M"\t\tZ/X, Mouse wheel\n"
 # define CTRL4		Y"\tColors"M"\t\tNumPad 2\n"Y"\tPsymode"M
 # define CTRL5		"\t\tNumPad 4\n"Y"\tModify iters"M"\tI/U\n"
-# define CONTROLS	CTRL0 CTRL1 CTRL2 CTRL3 CTRL4 CTRL5
+# define CONTROLS	CTRL0 CTRL1 CTRL2 CTRL3 CTRL4 CTRL5 CLR
 
 typedef struct	s_fractol
 {

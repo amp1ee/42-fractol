@@ -98,7 +98,7 @@ int			main(int ac, char **av)
 {
 	t_fractol		*fractol;
 
-	(void)(system("printf '\e[32m' && figlet -f lean '\tFract`ol'") + 42);
+	(void)(system("printf '\e[33m' && figlet -f lean '\tFract`ol'") + 1);
 	(void)(system("printf '\e[0m'") + 1);
 	if ((fractol = init_fractol(av[1], ac)) == NULL)
 		return (-1);
