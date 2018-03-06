@@ -47,8 +47,8 @@ int			check_args(char *av, t_fractol *f)
 		f->fun = newton;
 	else if (ft_strequ(av, "strnewton"))
 		f->fun = strnewton;
-	else if (ft_strequ(av, "galley"))
-		f->fun = galley;
+	else if (ft_strequ(av, "perpend_bship"))
+		f->fun = perpend_bship;
 	else if (ft_strequ(av, "celtic"))
 		f->fun = celtic;
 	return (f->fun != NULL);
@@ -71,7 +71,7 @@ t_fractol	*init_fractol(char *av, int ac)
 
 	if ((fr = (t_fractol *)malloc(sizeof(*fr))) == NULL)
 		return (exiterror(MLX_ERR, NULL));
-	if (ac == 1 || ac > 2 || !(check_args(av, fr)))
+	if (ac < 2 || ac > 2 || !(check_args(av, fr)))
 		return (exiterror(USG_ERR, NULL));
 	title = ft_strjoin("Fract`ol - ", av);
 	if ((fr->mlx = mlx_init()) == NULL ||
@@ -81,14 +81,9 @@ t_fractol	*init_fractol(char *av, int ac)
 		&(fr->s_line), &(fr->ed))) == NULL)
 		return (exiterror(MLX_ERR, fr));
 	ft_strdel(&title);
-	fr->zoom = (double)HEIGHT / 2;
-	fr->reoff = -3;
-	fr->imoff = -2;
-	fr->step = 0.1;
+	reset_fractol(fr);
 	fr->hstep = HEIGHT / THREADS;
 	fr->colormode = 0;
-	fr->iter = ITERATIONS;
-	fr->julia_fixed = 0;
 	fr->color = interp_color;
 	return (fr);
 }

@@ -12,6 +12,12 @@
 
 #include "../fractol.h"
 
+float				log_perc(int iter, int i, t_complex a)
+{
+	return (((float)(iter - i)
+		- log2(log2(sqrt(a.re * a.re + a.im * a.im)))) / iter);
+}
+
 void				change_color(t_fractol *fr, int key)
 {
 	if (key == KP_4)
@@ -20,7 +26,10 @@ void				change_color(t_fractol *fr, int key)
 		else
 			fr->color = interp_color;
 	else if (key == KP_2)
-		fr->colormode = !fr->colormode;
+	{
+		fr->colormode++;
+		fr->colormode %= 4;
+	}
 }
 
 static inline int	interp_i(int start, int end, double perc)
@@ -39,32 +48,45 @@ static inline int	interp_i(int start, int end, double perc)
 
 int					interp_color(int colormode, float perc)
 {
-	const int	c1 = colormode ? COLOR3 : COLOR1;
-	const int	c2 = colormode ? COLOR4 : COLOR2;
+	t_complex	rgb;
 	int			r;
 	int			g;
 	int			b;
 
-	perc = fabs(sin(perc * PI));
-	r = interp_i(c1 >> 16, c2 >> 16, perc);
-	g = interp_i((c1 >> 8) & 0xFF, (c2 >> 8) & 0xFF, perc);
-	b = interp_i(c1 & 0xFF, c2 & 0xFF, perc);
+	if (colormode == 0)
+		rgb = compl(COLOR3, COLOR4);
+	else if (colormode == 1)
+		rgb = compl(COLOR1, COLOR2);
+	else if (colormode == 2)
+		rgb = compl(COLOR5, COLOR6);
+	else
+		rgb = compl(COLOR9, COLOR10);
+	r = interp_i((int)rgb.re >> 16, (int)rgb.im >> 16, perc);
+	g = interp_i(((int)rgb.re >> 8) & 0xFF, ((int)rgb.im >> 8) & 0xFF, perc);
+	b = interp_i((int)rgb.re & 0xFF, (int)rgb.im & 0xFF, perc);
 	return ((r << 16) | (g << 8) | b);
 }
 
 int					psy_color(int colormode, float perc)
 {
-	const int	c1 = !colormode ? COLOR7 : COLOR4;
-	const int	c2 = !colormode ? COLOR8 : COLOR3;
+	t_complex	c;
 	int			r;
 	int			g;
 	int			b;
 
-	r = 0.9 * sin(interp_i(c1 >> 16, c2 >> 16, perc / 2)
-		* perc) * 125 + 125;
-	g = 0.8 * sin(interp_i((c1 >> 8) & 0xFF, (c2 >> 8) & 0xFF, perc / 2)
-		* perc) * 125 + 125;
-	b = 0.7 * sin(interp_i(c1 & 0xFF, c2 & 0xFF, perc / 2)
+	if (colormode == 0)
+		c = compl(COLOR7, COLOR8);
+	else if (colormode == 1)
+		c = compl(COLOR4, COLOR3);
+	else if (colormode == 2)
+		c = compl(COLOR5, COLOR6);
+	else
+		c = compl(COLOR9, COLOR2);
+	r = 0.9 * sin(interp_i((int)c.re >> 16, (int)c.im >> 16, perc / 3.0)
+		* perc) * 120 + 135;
+	g = 0.8 * sin(interp_i(((int)c.re >> 8) & 0xFF,
+		((int)c.im >> 8) & 0xFF, perc / 2.0) * perc) * 120 + 135;
+	b = 0.7 * sin(interp_i((int)c.re & 0xFF, (int)c.im & 0xFF, perc / 2.0)
 		* perc) * 120 + 135;
 	return ((r << 16) | (g << 8) | b);
 }

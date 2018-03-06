@@ -28,8 +28,6 @@ t_complex		cx_mul_cx(t_complex c0, t_complex c1);
 t_complex		cx_mul_sc(t_complex c, double scalar);
 t_complex		cx_div(t_complex c0, t_complex c1);
 t_complex		cx_conj(t_complex c);
-t_complex		cx_sin(t_complex c);
-t_complex		cx_cos(t_complex c);
 t_complex		cx_pow(t_complex c, int pow);
 
 #endif

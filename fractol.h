@@ -62,10 +62,12 @@
 # define COLOR4		0xFFF36C
 # define COLOR1		0x680b00
 # define COLOR2		0xFFD200
-# define COLOR5		0xC21500
-# define COLOR6		0xFFD200
+# define COLOR5		0x285540
+# define COLOR6		0xFFF36C
 # define COLOR7		0x3E2F5B
 # define COLOR8		0x136F63
+# define COLOR9		0x200750
+# define COLOR10	0x8ECC52
 
 # define Y			"\e[32m"
 # define M			"\e[33m"
@@ -76,7 +78,7 @@
 # define USG_1		Y"\n\tUsage:"M" ./fractol"Y" [option]\n\n"
 # define USG_2		M"\tAvailable options:\n"Y T"mandelbrot\n"T"mandelbar\n"
 # define USG_3		T"julia\n"T"juliabar\n"T"bship\n"T"newton\n"T"strnewton\n"
-# define USG_4		T"galley\n"T"celtic\n"
+# define USG_4		T"perpend_bship\n"T"celtic\n"
 # define USG_ERR	USG_1 USG_2 USG_3 USG_4 CLR
 # define PTHR_ERR	"ERROR: Some problem with pthread occured"
 # define WIDTH		800
@@ -130,13 +132,14 @@ int				mouse_handler2(int mx, int my, t_fractol *fr);
 void			change_color(t_fractol *fr, int key);
 int				interp_color(int colormode, float perc);
 int				psy_color(int colormode, float perc);
+float			log_perc(int iter, int i, t_complex a);
 
 void			mandelbrot(t_fractol *fr, int x, int y);
 void			newton(t_fractol *fr, int x, int y);
 void			strnewton(t_fractol *fr, int x, int y);
 void			burning(t_fractol *fr, int x, int y);
 void			mandelbar(t_fractol *fr, int x, int y);
-void			galley(t_fractol *fr, int x, int y);
+void			perpend_bship(t_fractol *fr, int x, int y);
 void			celtic(t_fractol *fr, int x, int y);
 
 void			put_pxl(t_fractol *fr, int x, int y, unsigned int c);
