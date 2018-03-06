@@ -67,7 +67,7 @@
 # define COLOR7		0x3E2F5B
 # define COLOR8		0x136F63
 # define COLOR9		0x200750
-# define COLOR10	0x8ECC52
+# define COLOR10	0xCC8E52
 
 # define Y			"\e[32m"
 # define M			"\e[33m"
