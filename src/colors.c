@@ -54,13 +54,14 @@ int					interp_color(int colormode, float perc)
 	int			b;
 
 	if (colormode == 0)
-		rgb = compl(COLOR3, COLOR4);
+		rgb = compl(COLOR3, COLOR11);
 	else if (colormode == 1)
 		rgb = compl(COLOR1, COLOR2);
 	else if (colormode == 2)
 		rgb = compl(COLOR5, COLOR6);
 	else
 		rgb = compl(COLOR9, COLOR10);
+	perc = sin(PI * perc);
 	r = interp_i((int)rgb.re >> 16, (int)rgb.im >> 16, perc);
 	g = interp_i(((int)rgb.re >> 8) & 0xFF, ((int)rgb.im >> 8) & 0xFF, perc);
 	b = interp_i((int)rgb.re & 0xFF, (int)rgb.im & 0xFF, perc);

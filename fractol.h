@@ -68,6 +68,7 @@
 # define COLOR8		0x136F63
 # define COLOR9		0x200750
 # define COLOR10	0xCC8E52
+# define COLOR11	0xBBD3FF
 
 # define Y			"\e[32m"
 # define M			"\e[33m"
@@ -81,10 +82,10 @@
 # define USG_4		T"perpend_bship\n"T"celtic\n"
 # define USG_ERR	USG_1 USG_2 USG_3 USG_4 CLR
 # define PTHR_ERR	"ERROR: Some problem with pthread occured"
-# define WIDTH		800
-# define HEIGHT		533
+# define WIDTH		900
+# define HEIGHT		600
 # define ITERATIONS	50
-# define THREADS	12
+# define THREADS	16
 # define TOLER		1e-6
 # define CTRL0		"\n\t\t"Y BOLD"Controls\n\n"CLR
 # define CTRL1		Y"\tFix Julia set"M"\tF\n"Y"\tReset view"M"\tR\n"

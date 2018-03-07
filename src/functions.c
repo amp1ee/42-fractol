@@ -102,7 +102,7 @@ void		celtic(t_fractol *fr, int x, int y)
 
 void		perpend_bship(t_fractol *fr, int x, int y)
 {
-		t_complex	a;
+	t_complex	a;
 	t_complex	aa;
 	int			i;
 
