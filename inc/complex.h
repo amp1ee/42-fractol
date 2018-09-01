@@ -29,5 +29,8 @@ t_complex		cx_mul_sc(t_complex c, double scalar);
 t_complex		cx_div(t_complex c0, t_complex c1);
 t_complex		cx_conj(t_complex c);
 t_complex		cx_pow(t_complex c, int pow);
+t_complex		cx_func(t_complex z);
+t_complex		cx_prederiv(t_complex z);
+t_complex		cx_deriv(t_complex z);
 
 #endif

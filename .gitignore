@@ -1,0 +1,5 @@
+fractol
+obj/
+*.o
+*.a
+*_DS_Store

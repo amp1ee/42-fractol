@@ -10,114 +10,52 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../fractol.h"
+#include "fractol.h"
 
-void		mandelbrot(t_fractol *fr, int x, int y)
+void	mandelbrot(t_fractol *fr, t_complex *a, t_complex a2, int *i)
 {
-	t_complex	a;
-	t_complex	aa;
-	int			i;
-
-	a.re = fr->reoff + x * fr->centerx;
-	a.im = fr->imoff + (HEIGHT - y) * fr->centery;
-	if (fr->julia == 0)
-		fr->c = compl(a.re, a.im);
-	i = fr->iter;
-	while ((i--) > 0 && (a.re * a.re + a.im * a.im) < 4)
+	while (((*i)--) > 0 && !BAILOUT(*a))
 	{
-		aa = cx_pow(a, 2);
-		a = cx_add(aa, fr->c);
+		a2 = cx_pow(*a, 2);
+		*a = cx_add(a2, fr->c);
 	}
-	if (i == -1)
-		put_pxl(fr, x, y, BLACK);
-	else
-		put_pxl(fr, x, y, fr->color(fr->colormode, log_perc(fr->iter, i, a)));
 }
 
-void		mandelbar(t_fractol *fr, int x, int y)
+void	mandelbar(t_fractol *fr, t_complex *a, t_complex a2, int *i)
 {
-	t_complex	a;
-	t_complex	aa;
-	int			i;
-
-	a.re = fr->reoff + x * fr->centerx;
-	a.im = fr->imoff + (HEIGHT - y) * fr->centery;
-	if (fr->julia == 0)
-		fr->c = compl(a.re, a.im);
-	i = fr->iter;
-	while ((i--) > 0 && (a.re * a.re + a.im * a.im) < 4)
+	while (((*i)--) > 0 && !BAILOUT(*a))
 	{
-		aa = cx_conj(cx_pow(a, 2));
-		a = cx_add(aa, fr->c);
+		a2 = cx_conj(cx_pow(*a, 2));
+		*a = cx_add(a2, fr->c);
 	}
-	if (i == -1)
-		put_pxl(fr, x, y, BLACK);
-	else
-		put_pxl(fr, x, y, fr->color(fr->colormode, log_perc(fr->iter, i, a)));
 }
 
-void		burning(t_fractol *fr, int x, int y)
+void	burning(t_fractol *fr, t_complex *a, t_complex a2, int *i)
 {
-	t_complex	a;
-	t_complex	aa;
-	int			i;
-
-	a.re = fr->reoff + x * fr->centerx;
-	a.im = fr->imoff + (HEIGHT - y) * fr->centery;
-	fr->c = compl(a.re, a.im);
-	i = fr->iter;
-	while ((i--) > 0 && (a.re * a.re + a.im * a.im) < 4)
+	while (((*i)--) > 0 && !BAILOUT(*a))
 	{
-		aa.re = (a.re * a.re) - (a.im * a.im);
-		aa.im = -2 * fabs(a.re) * fabs(a.im);
-		a = cx_add(aa, fr->c);
+		a2.re = (a->re * a->re) - (a->im * a->im);
+		a2.im = -2 * fabs(a->re) * fabs(a->im);
+		*a = cx_add(a2, fr->c);
 	}
-	if (i == -1)
-		put_pxl(fr, x, y, BLACK);
-	else
-		put_pxl(fr, x, y, fr->color(fr->colormode, log_perc(fr->iter, i, a)));
 }
 
-void		celtic(t_fractol *fr, int x, int y)
+void	celtic(t_fractol *fr, t_complex *a, t_complex a2, int *i)
 {
-	t_complex	a;
-	t_complex	aa;
-	int			i;
-
-	a.re = fr->reoff + x * fr->centerx;
-	a.im = fr->imoff + (HEIGHT - y) * fr->centery;
-	fr->c = compl(a.re, a.im);
-	i = fr->iter;
-	while ((i--) > 0 && (a.re * a.re + a.im * a.im) < 4)
+	while (((*i)--) > 0 && !BAILOUT(*a))
 	{
-		aa.re = fabs(a.re * a.re - a.im * a.im);
-		aa.im = -2 * a.re * a.im;
-		a = cx_add(aa, fr->c);
+		a2.re = fabs(a->re * a->re - a->im * a->im);
+		a2.im = -2 * a->re * a->im;
+		*a = cx_add(a2, fr->c);
 	}
-	if (i == -1)
-		put_pxl(fr, x, y, BLACK);
-	else
-		put_pxl(fr, x, y, fr->color(fr->colormode, log_perc(fr->iter, i, a)));
 }
 
-void		perpend_bship(t_fractol *fr, int x, int y)
+void	perpend_bship(t_fractol *fr, t_complex *a, t_complex a2, int *i)
 {
-	t_complex	a;
-	t_complex	aa;
-	int			i;
-
-	a.re = fr->reoff + x * fr->centerx;
-	a.im = fr->imoff + (HEIGHT - y) * fr->centery;
-	fr->c = compl(a.re, a.im);
-	i = fr->iter;
-	while ((i--) > 0 && (a.re * a.re + a.im * a.im) < 4)
+	while (((*i)--) > 0 && !BAILOUT(*a))
 	{
-		aa.re = a.re * a.re - a.im * a.im;
-		aa.im = -2 * a.re * fabs(a.im);
-		a = cx_add(aa, fr->c);
+		a2.re = a->re * a->re - a->im * a->im;
+		a2.im = -2 * a->re * fabs(a->im);
+		*a = cx_add(a2, fr->c);
 	}
-	if (i == -1)
-		put_pxl(fr, x, y, BLACK);
-	else
-		put_pxl(fr, x, y, fr->color(fr->colormode, log_perc(fr->iter, i, a)));
 }

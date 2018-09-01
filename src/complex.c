@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../complex.h"
+#include "complex.h"
 
 t_complex	compl(double re, double im)
 {

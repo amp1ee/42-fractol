@@ -13,18 +13,27 @@
 #ifndef FRACTOL_H
 # define FRACTOL_H
 
+# include <pthread.h>
+# include <stdbool.h>
+# include "../minilibx/mlx.h"
+# include "../libft/libft.h"
+# include "complex.h"
+
+/*
+**	Keycodes
+*/
 # ifdef __linux__
-#  define KB_ESC		0xff1b
+#  define KB_ESC		65307
 #  define KB_X			120
 #  define KB_Z			122
 #  define KB_UP			65362
 #  define KB_DOWN		65364
 #  define KB_LEFT		65361
 #  define KB_RIGHT		65363
-#  define KP_ADD		0xffab
-#  define KP_SUBTRACT	0xffad
-#  define KB_I			0x0069
-#  define KB_U			0x0075
+#  define KP_ADD		65451
+#  define KP_SUBTRACT	65453
+#  define KB_I			105
+#  define KB_U			117
 #  define KB_R			114
 #  define KP_4			65430
 #  define KP_2			65433
@@ -46,14 +55,11 @@
 #  define KP_2			84
 #  define KB_F			3
 # endif
+# define MWHEELUP		4
+# define MWHEELDN		5
 
-# define MWU			4
-# define MWD			5
-
-# include "./minilibx/mlx.h"
-# include <pthread.h>
-# include "./libft/libft.h"
-# include "complex.h"
+# define WIDTH		900
+# define HEIGHT		600
 
 # define PI			3.141592
 # define WHITE		0xFFFFFF
@@ -70,30 +76,61 @@
 # define COLOR10	0xCC8E52
 # define COLOR11	0xBBD3FF
 
-# define Y			"\e[32m"
-# define M			"\e[33m"
+/*
+**	Console text controls
+*/
+# define YEL		"\e[32m"
+# define MAG		"\e[33m"
 # define BOLD		"\e[1m\e[4m"
 # define CLR		"\e[0m"
-# define T			"\t\t  "
+# define TABS		"\t\t  "
+
+/*
+**	Program arguments
+*/
+# define MBROT		"mbrot"
+# define MBAR		"mbar"
+# define JULIA		"julia"
+# define JBAR		"jbar"
+# define BSHIP		"bship"
+# define PSHIP		"pship"
+# define CELTIC		"celt"
+# define NEWTON		"newton"
+# define ANEWTON	"anewton"
+
+/*
+**	Messages
+*/
 # define MLX_ERR	"ERROR: mlx init failed"
-# define USG_1		Y"\n\tUsage:"M" ./fractol"Y" [option]\n\n"
-# define USG_2		M"\tAvailable options:\n"Y T"mandelbrot\n"T"mandelbar\n"
-# define USG_3		T"julia\n"T"juliabar\n"T"bship\n"T"newton\n"T"strnewton\n"
-# define USG_4		T"perpend_bship\n"T"celtic\n"
-# define USG_ERR	USG_1 USG_2 USG_3 USG_4 CLR
+# define USG_ERR	YEL "\n\tUsage:" MAG " ./fractol" YEL " [option]\n\n"	\
+					MAG "\tAvailable options:\n" YEL						\
+					TABS MBROT" - Mandelbrot\n"								\
+					TABS MBAR " - Mandelbar\n"								\
+					TABS JULIA " - Julia set\n"								\
+					TABS JBAR " - Juliabar\n"								\
+					TABS BSHIP " - Burning ship\n"							\
+					TABS PSHIP " - Perpendicular burning ship\n"			\
+					TABS CELTIC " - Celtic mandelbar\n"						\
+					TABS NEWTON " - Newton's fractal\n"						\
+					TABS ANEWTON " - Alternative Newton's fractal\n" CLR
 # define PTHR_ERR	"ERROR: Some problem with pthread occured"
-# define WIDTH		900
-# define HEIGHT		600
-# define ITERATIONS	50
-# define THREADS	16
-# define TOLER		1e-6
-# define CTRL0		"\n\t\t"Y BOLD"Controls\n\n"CLR
-# define CTRL1		Y"\tFix Julia set"M"\tF\n"Y"\tReset view"M"\tR\n"
-# define CTRL2		Y"\tMove"M"\t\tUp/Down/Left/Right\n"
-# define CTRL3		Y"\tZoom"M"\t\tZ/X, Mouse wheel\n"
-# define CTRL4		Y"\tColors"M"\t\tNumPad 2\n"Y"\tPsymode"M
-# define CTRL5		"\t\tNumPad 4\n"Y"\tModify iters"M"\tI/U\n"
-# define CONTROLS	CTRL0 CTRL1 CTRL2 CTRL3 CTRL4 CTRL5 CLR
+# define CONTROLS	"\n\t\t" YEL BOLD "Controls\n\n" CLR					\
+					YEL "\tFix Julia set" MAG "\tF\n"						\
+					YEL "\tReset view" MAG "\tR\n"							\
+					YEL "\tMove" MAG "\t\tUp/Down/Left/Right\n"				\
+					YEL "\tZoom" MAG "\t\tZ/X, Mouse wheel\n"				\
+					YEL "\tColors" MAG "\t\tNumPad 2\n"						\
+					YEL "\tPsymode" MAG "\t\tNumPad 4\n"					\
+					YEL "\tModify iters" MAG "\tI/U\n" CLR
+
+# define ITERS_MIN		50
+# define ITERS_MAX		10000
+# define THREADS_NUM	8
+# define TOLER			1e-6
+
+# define BAILOUT(a)			(((a).re * (a).re + (a).im * (a).im) >= 4)
+# define IS_ROOT(z, roots)	(fabs((z).re - (roots)[j].re) < (TOLER) && \
+							fabs((z).im - (roots)[j].im) < (TOLER))
 
 typedef struct	s_fractol
 {
@@ -109,6 +146,7 @@ typedef struct	s_fractol
 	double		reoff;
 	double		imoff;
 	void		(*fun)();
+	void		(*iter_fun)();
 	int			(*color)(int, float);
 	int			colormode;
 	int			iter;
@@ -118,11 +156,11 @@ typedef struct	s_fractol
 	t_complex	mpos;
 	double		centerx;
 	double		centery;
-	char		julia;
-	char		julia_fixed;
+	bool		julia;
+	bool		julia_fixed;
+	bool		alt_newton;
 }				t_fractol;
 
-void			*drawthr(void *frac_p);
 void			get_threads(t_fractol *fr);
 void			*exiterror(char *reason, t_fractol *fr);
 void			reset_fractol(t_fractol *fr);
@@ -135,14 +173,15 @@ int				interp_color(int colormode, float perc);
 int				psy_color(int colormode, float perc);
 float			log_perc(int iter, int i, t_complex a);
 
-void			mandelbrot(t_fractol *fr, int x, int y);
-void			newton(t_fractol *fr, int x, int y);
-void			strnewton(t_fractol *fr, int x, int y);
-void			burning(t_fractol *fr, int x, int y);
-void			mandelbar(t_fractol *fr, int x, int y);
-void			perpend_bship(t_fractol *fr, int x, int y);
-void			celtic(t_fractol *fr, int x, int y);
+void			mandelbrot(t_fractol *fr, t_complex *a, t_complex a2, int *i);
+void			burning(t_fractol *fr, t_complex *a, t_complex a2, int *i);
+void			mandelbar(t_fractol *fr, t_complex *a, t_complex a2, int *i);
+void			perpend_bship(t_fractol *fr, t_complex *a,
+													t_complex a2, int *i);
+void			celtic(t_fractol *fr, t_complex *a, t_complex a2, int *i);
+void			newton(t_fractol *fr, t_complex *a, t_complex a2, int *i);
 
-void			put_pxl(t_fractol *fr, int x, int y, unsigned int c);
+void			iter_mandelbrots(t_fractol *fr, int x, int y);
+void			iter_newtons(t_fractol *fr, int x, int y);
 
 #endif

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../fractol.h"
+#include "fractol.h"
 
 void		*exiterror(char *reason, t_fractol *fr)
 {
@@ -26,32 +26,33 @@ void		*exiterror(char *reason, t_fractol *fr)
 	return (NULL);
 }
 
-int			check_args(char *av, t_fractol *f)
+bool		check_args(char *av, t_fractol *f)
 {
 	f->julia = 0;
-	if (ft_strequ(av, "mandelbrot"))
+	f->iter_fun = iter_mandelbrots;
+	if (ft_strequ(av, MBROT))
 		f->fun = mandelbrot;
-	else if (ft_strequ(av, "mandelbar"))
+	else if (ft_strequ(av, MBAR))
 		f->fun = mandelbar;
-	else if (ft_strequ(av, "julia") || (ft_strequ(av, "juliabar")))
+	else if (ft_strequ(av, JULIA) || ft_strequ(av, JBAR))
 	{
 		f->julia = 1;
-		if (ft_strequ(av, "julia"))
-			f->fun = mandelbrot;
-		else
-			f->fun = mandelbar;
+		f->fun = (ft_strequ(av, JULIA)) ? mandelbrot : mandelbar;
 	}
-	else if (ft_strequ(av, "bship"))
+	else if (ft_strequ(av, BSHIP))
 		f->fun = burning;
-	else if (ft_strequ(av, "newton"))
-		f->fun = newton;
-	else if (ft_strequ(av, "strnewton"))
-		f->fun = strnewton;
-	else if (ft_strequ(av, "perpend_bship"))
+	else if (ft_strequ(av, PSHIP))
 		f->fun = perpend_bship;
-	else if (ft_strequ(av, "celtic"))
+	else if (ft_strequ(av, CELTIC))
 		f->fun = celtic;
-	return (f->fun != NULL);
+	else if (ft_strequ(av, NEWTON) || ft_strequ(av, ANEWTON))
+	{
+		f->alt_newton = ft_strequ(av, ANEWTON);
+		f->iter_fun = iter_newtons;
+	}
+	else
+		return (false);
+	return (true);
 }
 
 void		reset_fractol(t_fractol *fr)
@@ -60,7 +61,7 @@ void		reset_fractol(t_fractol *fr)
 	fr->reoff = -3;
 	fr->imoff = -2;
 	fr->step = 0.1;
-	fr->iter = ITERATIONS;
+	fr->iter = ITERS_MIN;
 	fr->julia_fixed = 0;
 }
 
@@ -82,7 +83,7 @@ t_fractol	*init_fractol(char *av, int ac)
 		return (exiterror(MLX_ERR, fr));
 	ft_strdel(&title);
 	reset_fractol(fr);
-	fr->hstep = HEIGHT / THREADS;
+	fr->hstep = HEIGHT / THREADS_NUM;
 	fr->colormode = 0;
 	fr->color = interp_color;
 	return (fr);

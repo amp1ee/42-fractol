@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../fractol.h"
+#include "fractol.h"
 
 static void	zoom(t_fractol *fr, int key)
 {
@@ -20,18 +20,18 @@ static void	zoom(t_fractol *fr, int key)
 	d = 2 * HEIGHT / fr->zoom;
 	corr.re = fr->reoff + ((float)fr->mpos.re / WIDTH) * d * 1.5;
 	corr.im = fr->imoff + ((HEIGHT - (float)fr->mpos.im) / HEIGHT) * d;
-	if (key == KB_X || key == MWU)
+	if (key == KB_X || key == MWHEELUP)
 	{
 		fr->zoom *= 1.05;
 		fr->step *= 0.95;
-		if (fr->iter < 9999)
+		if (fr->iter < ITERS_MAX)
 			fr->iter += 2;
 	}
 	else
 	{
 		fr->zoom *= 0.95;
 		fr->step *= 1.05;
-		if (fr->iter > 50)
+		if (fr->iter > ITERS_MIN)
 			fr->iter -= 2;
 	}
 	d = 2 * HEIGHT / fr->zoom;

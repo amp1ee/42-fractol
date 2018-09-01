@@ -1,36 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   complex2.c                                         :+:      :+:    :+:   */
+/*   complex3.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oahieiev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/27 19:59:06 by oahieiev          #+#    #+#             */
-/*   Updated: 2018/02/27 19:59:08 by oahieiev         ###   ########.fr       */
+/*   Created: 2018/02/27 19:58:46 by oahieiev          #+#    #+#             */
+/*   Updated: 2018/02/27 19:58:50 by oahieiev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "complex.h"
+#include "fractol.h"
 
-t_complex	cx_div(t_complex c0, t_complex c1)
+t_complex	cx_func(t_complex z)
 {
-	t_complex c;
-
-	c = cx_mul_sc(cx_conj(c1), (1.0 / (c1.re * c1.re + c1.im * c1.im)));
-	return (cx_mul_cx(c0, c));
+	z = cx_sub(cx_pow(z, 3), compl(1, 0));
+	return (z);
 }
 
-t_complex	cx_pow(t_complex c, int pow)
+t_complex	cx_prederiv(t_complex z)
 {
-	t_complex	res;
-
-	res = c;
-	while (--pow)
-		res = cx_mul_cx(res, c);
-	return (res);
+	z = cx_add(z, compl(TOLER, 0));
+	return (cx_func(z));
 }
 
-t_complex	cx_conj(t_complex c)
+t_complex	cx_deriv(t_complex z)
 {
-	return (compl(c.re, c.im * -1));
+	t_complex	c;
+
+	c = cx_prederiv(z);
+	c = cx_sub(c, cx_func(z));
+	c = cx_mul_sc(c, (1.0 / TOLER));
+	return (c);
 }

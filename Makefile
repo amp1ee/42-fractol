@@ -1,14 +1,15 @@
 NAME		= fractol
 CC			= gcc
 SRCDIR		= ./src/
+INCLDIR		= ./inc/
 SRC			= $(addprefix $(SRCDIR), \
 					main.c \
 					controls.c \
 					draw.c \
 					functions.c \
-					functions2.c \
 					complex.c \
 					complex2.c \
+					complex3.c \
 					colors.c)
 OBJDIR		= ./obj/
 OBJ			= $(SRC:$(SRCDIR)%.c=$(OBJDIR)%.o)
@@ -28,7 +29,7 @@ LIBFT_DIR	= ./libft/
 LIBFT		= $(addprefix $(LIBFT_DIR), libft.a)
 LIBFT_FLAGS	= -lft -L$(LIBFT_DIR)
 MATHLIB		= -lm
-INCL		= fractol.h complex.h
+INCL		= $(addprefix $(INCLDIR), fractol.h complex.h)
 
 .PHONY: all clean fclean re
 
@@ -37,7 +38,7 @@ all: $(NAME)
 $(OBJDIR)%.o: $(SRCDIR)%.c $(INCL)
 	@printf "\tCompiling $<\n"
 	@mkdir -p $(OBJDIR)
-	@gcc $(FLAGS) -c $< -o $@ -I.
+	@gcc $(FLAGS) -c $< -o $@ -I$(INCLDIR)
 
 $(NAME): $(OBJ) $(LIBFT) $(MLXLIB)
 	@gcc $(OBJ) -o $(NAME) $(MLX) $(MATHLIB) $(MULTHREAD) $(LIBFT_FLAGS)
